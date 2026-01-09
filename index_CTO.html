@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi CTO Sichaumette</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a5490;
+        }
+        
+        .header-subtitle {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .date-picker-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+        
+        .date-picker-label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        #dateActuelle {
+            padding: 8px 12px;
+            border: 2px solid #1a5490;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #1a5490;
+        }
+        
+        .situation-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .situation-box {
+            padding: 20px;
+            border-radius: 6px;
+        }
+        
+        .situation-initial {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            border-left: 4px solid #1a5490;
+        }
+        
+        .situation-target {
+            background: linear-gradient(135deg, #fff3e0 0%, #fff9f5 100%);
+            border-left: 4px solid #ff9800;
+        }
+        
+        .situation-current {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%);
+            border-left: 4px solid #4caf50;
+        }
+        
+        .situation-box h3 {
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            color: #666;
+            letter-spacing: 0.5px;
+        }
+        
+        .situation-box .row {
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .situation-box .label {
+            font-size: 12px;
+            color: #666;
+            flex: 1;
+        }
+        
+        .situation-box .value {
+            font-size: 15px;
+            font-weight: bold;
+            color: #1a1a1a;
+            text-align: right;
+            min-width: 120px;
+        }
+        
+        .situation-initial .value {
+            color: #1a5490;
+        }
+        
+        .situation-target .value {
+            color: #ff9800;
+        }
+        
+        .situation-current .value {
+            color: #4caf50;
+        }
+        
+        .editable-target {
+            background: transparent;
+            border: none;
+            padding: 0;
+            border-radius: 0;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: right;
+            cursor: pointer;
+            color: #ff9800;
+        }
+        
+            max-width: 60px !important;
+        }
+        
+            max-width: 140px !important;
+        }
+        
+        .editable-target:focus {
+            background: #fffbea;
+            border: 1px solid #ffc107;
+            padding: 4px 8px;
+            outline: none;
+        }
+        
+        .table-section {
+            margin-top: 40px;
+        }
+        
+        .table-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #1a5490;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .table-controls {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-add {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .btn-add:hover {
+            background: #45a049;
+        }
+        
+        .btn-print {
+            background: #1a5490;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .btn-print:hover {
+            background: #0d3a6f;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        thead {
+            background: #1a5490;
+            color: white;
+        }
+        
+        th {
+            padding: 12px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+        }
+        
+        th.number {
+            text-align: right;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+        }
+        
+        tbody tr:nth-child(odd) {
+            background: #ffffff;
+        }
+        
+        tbody tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        tbody tr:hover {
+            background: #f0f7ff;
+        }
+        
+        .number {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .positive {
+            color: #4caf50;
+            font-weight: 600;
+        }
+        
+        .negative {
+            color: #d32f2f;
+            font-weight: 600;
+        }
+        
+        .neutral {
+            color: #666;
+        }
+        
+        tr.total-row {
+            background: #ecf0f6 !important;
+            font-weight: bold;
+            border-top: 2px solid #1a5490;
+        }
+        
+        tr.section-row {
+            background: #ecf0f6 !important;
+            font-weight: bold;
+            border-top: 1px solid #ddd;
+        }
+        
+        tr.delete-row {
+            opacity: 0.7;
+        }
+        
+        .btn-delete {
+            background: rgba(211, 47, 47, 0.3);
+            color: #d32f2f;
+            border: none;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        
+        .btn-delete:hover {
+            background: rgba(211, 47, 47, 0.6);
+        }
+        
+        input.editable {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        td.editable-cell {
+            position: relative;
+            padding: 0;
+        }
+        
+        td.editable-cell span {
+            display: block;
+            padding: 12px;
+            cursor: pointer;
+            min-height: 20px;
+        }
+        
+        td.editable-cell span:hover {
+            background: #f0f7ff;
+        }
+        
+        td.editable-cell input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #1a5490;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            padding: 6px;
+            z-index: 10;
+        }
+        
+        td.editable-cell input:focus {
+            outline: none;
+        }
+        
+        .mode-emploi {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 4px solid #1a5490;
+            border-radius: 4px;
+        }
+        
+        .mode-emploi h4 {
+            color: #1a5490;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+        
+        .mode-emploi-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .mode-emploi ul {
+            list-style: none;
+            margin-left: 0;
+        }
+        
+        .mode-emploi li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .mode-emploi li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+        }
+        
+        /* PRINT STYLES */
+        @media print {
+            * {
+                box-shadow: none !important;
+            }
+            
+            body {
+                background: white !important;
+                color: black !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            .container {
+                max-width: 100%;
+                margin: 0 !important;
+                padding: 6mm 10mm !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                background: white !important;
+            }
+            
+            .header-top {
+                border-bottom: 2px solid #1a5490 !important;
+                margin-bottom: 15px !important;
+                padding-bottom: 12px !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+            
+            .header-title {
+                font-size: 20px !important;
+                font-weight: bold !important;
+                color: #1a5490 !important;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+            }
+            
+            .header-subtitle {
+                font-size: 12px !important;
+                color: #333 !important;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+                font-weight: normal !important;
+            }
+            
+            .date-picker-container {
+                display: none !important;
+            }
+            
+            .situation-container {
+                gap: 12px !important;
+                margin-bottom: 20px !important;
+                grid-template-columns: 1fr 1fr 1fr !important;
+                display: grid !important;
+                page-break-inside: avoid !important;
+            }
+            
+            .situation-box {
+                page-break-inside: avoid !important;
+                padding: 12px !important;
+                border-radius: 4px !important;
+                border: 1px solid #ccc !important;
+            }
+            
+            .situation-initial {
+                background: #f0f4f9 !important;
+                border-left: 4px solid #1a5490 !important;
+            }
+            
+            .situation-target {
+                background: #fff9f0 !important;
+                border-left: 4px solid #ff9800 !important;
+            }
+            
+            .situation-current {
+                background: #f0f9f0 !important;
+                border-left: 4px solid #4caf50 !important;
+            }
+            
+            .situation-box h3 {
+                font-size: 11px !important;
+                font-weight: bold !important;
+                color: #333 !important;
+                text-transform: uppercase !important;
+                margin-bottom: 10px !important;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+            }
+            
+            .situation-box .value {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+                color: #1a1a1a !important;
+                font-weight: bold !important;
+            }
+            
+            .situation-initial .value {
+                color: #1a5490 !important;
+            }
+            
+            .situation-target .value {
+                color: #ff9800 !important;
+            }
+            
+            .situation-current .value {
+                color: #4caf50 !important;
+            }
+            
+            .table-title {
+                font-size: 14px !important;
+                font-weight: bold !important;
+                color: #1a5490 !important;
+                margin-bottom: 10px !important;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+                text-transform: uppercase !important;
+            }
+            
+            thead {
+                background: #1a5490 !important;
+                color: white !important;
+                page-break-after: avoid !important;
+            }
+            
+            th {
+                color: white !important;
+                font-weight: 600 !important;
+                font-size: 10px !important;
+                padding: 8px !important;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+                text-transform: uppercase !important;
+            }
+            
+            tbody tr {
+                page-break-inside: avoid !important;
+            }
+            
+            tbody tr:nth-child(odd) {
+                background: white !important;
+            }
+            
+            tbody tr:nth-child(even) {
+                background: #f9f9f9 !important;
+            }
+            
+            tbody td {
+                padding: 8px !important;
+                border-bottom: 1px solid #ddd !important;
+                font-size: 12px !important;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+                color: #333 !important;
+            }
+            
+            tbody td.number {
+                font-family: 'Courier New', monospace !important;
+                text-align: right !important;
+            }
+            
+            .positive {
+                color: #4caf50 !important;
+                font-weight: 600 !important;
+                font-family: 'Courier New', monospace !important;
+            }
+            
+            .negative {
+                color: #d32f2f !important;
+                font-weight: 600 !important;
+                font-family: 'Courier New', monospace !important;
+            }
+            
+            .neutral {
+                color: #666 !important;
+                font-family: 'Courier New', monospace !important;
+            }
+            
+            tr.total-row {
+                background: #ecf0f6 !important;
+                font-weight: bold !important;
+                border-top: 2px solid #1a5490 !important;
+                page-break-inside: avoid !important;
+            }
+            
+            tr.section-row {
+                background: #ecf0f6 !important;
+                font-weight: bold !important;
+                border-top: 1px solid #ddd !important;
+                page-break-inside: avoid !important;
+            }
+            
+            .table-controls, .mode-emploi, .btn-add, .btn-print, .btn-delete {
+                display: none !important;
+            }
+            
+            table {
+                page-break-inside: auto !important;
+                margin-bottom: 10px !important;
+                border-collapse: collapse !important;
+                width: 100% !important;
+            }
+            
+            td, th {
+                border-bottom: 1px solid #ddd !important;
+            }
+            
+            @page {
+                size: A4 portrait;
+                margin: 6mm 10mm !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-top">
+            <div>
+                <div class="header-title">Portefeuille CTO - Suivi Dynamique</div>
+                <div class="header-subtitle">Compte 20001303001 | M. Jean SICHAUMETTE</div>
+            </div>
+            <div class="date-picker-container">
+                <span class="date-picker-label">Date de mise à jour</span>
+                <input type="date" id="dateActuelle" value="2026-01-09">
+            </div>
+        </div>
+        
+        <div class="situation-container">
+            <!-- INITIAL -->
+            <div class="situation-box situation-initial">
+                <h3>Situation Initiale</h3>
+                <div class="row">
+                    <span class="label">Date</span>
+                    <span class="value">07/01/2026</span>
+                </div>
+                <div class="row">
+                    <span class="label">Valeur Totale</span>
+                    <span class="value">39 272,93 €</span>
+                </div>
+                <div class="row">
+                    <span class="label">dont Titres</span>
+                    <span class="value" style="font-size: 13px;">30 693,65 €</span>
+                </div>
+                <div class="row">
+                    <span class="label">dont Espèces</span>
+                    <span class="value" style="font-size: 13px;">8 579,28 €</span>
+                </div>
+            </div>
+            
+            <!-- CIBLE -->
+            <div class="situation-box situation-target">
+                <h3>Cible Objectif</h3>
+                <div class="row">
+                    <span class="label">Rendement %</span>
+                    <input type="number" class="editable-target" id="rendementPct" value="17" step="0.01" min="0">
+                </div>
+                <div class="row">
+                    <span class="label">Valeur Cible</span>
+                    <input type="number" class="editable-target" id="valeurCible" value="45996" step="0.01" min="0">
+                </div>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.1);">
+                    <div class="row">
+                        <span class="label">Manquant (€)</span>
+                        <span class="value" style="font-size: 13px;" id="manquantEuro">6 723,07 €</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">Manquant (%)</span>
+                        <span class="value" style="font-size: 13px;" id="manquantPct">17,10%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ACTUELLE -->
+            <div class="situation-box situation-current">
+                <h3>Situation Actuelle</h3>
+                <div class="row">
+                    <span class="label">Valeur Totale</span>
+                    <span class="value" id="valeurTotaleActuelle">39 232,05 €</span>
+                </div>
+                <div class="row">
+                    <span class="label">dont Titres</span>
+                    <span class="value" style="font-size: 13px;" id="titresActuels">28 950,46 €</span>
+                </div>
+                <div class="row">
+                    <span class="label">dont Espèces</span>
+                    <span class="value" style="font-size: 13px;" id="especesActuelles">10 281,59 €</span>
+                </div>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.1);">
+                    <div class="row">
+                        <span class="label">Rendement Actuel</span>
+                        <span class="value" style="font-size: 13px;" id="rendementActuel">-0,10%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-section">
+            <div class="table-title">Détail des Positions</div>
+            <div class="table-controls">
+                <button class="btn-add" onclick="ajouterLigne()">+ Ajouter Position</button>
+                <button class="btn-print" onclick="imprimerTableau()">🖨️ Imprimer / PDF</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Code</th>
+                        <th class="number">Quantité</th>
+                        <th class="number">PRU (€)</th>
+                        <th class="number">Cours du Jour (€)</th>
+                        <th class="number">Valeur (€)</th>
+                        <th class="number">+/- Values (€)</th>
+                        <th class="number">Perf %</th>
+                        <th style="width: 50px;"></th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="mode-emploi">
+            <h4>💡 Mode d'emploi</h4>
+            <div class="mode-emploi-grid">
+                <ul>
+                    <li><strong>Date :</strong> Choisissez la date mise à jour</li>
+                    <li><strong>Rendement % :</strong> Cible auto-calculée</li>
+                    <li><strong>Valeur Cible :</strong> Rendement auto-calculé</li>
+                    <li><strong>Clic cellule :</strong> Éditer valeur</li>
+                </ul>
+                <ul>
+                    <li><strong>Ajouter :</strong> "+ Ajouter Position"</li>
+                    <li><strong>Supprimer :</strong> Bouton rond rouge</li>
+                    <li><strong>Imprimer :</strong> "🖨️ Imprimer / PDF"</li>
+                    <li><strong>Automatique :</strong> Toutes valeurs recalculées ✓</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Données initiales
+        const positions = [
+            { nom: "AGROGENERATION", code: "ALAGR", qty: 0, pru: 0.391, cours: 0.043 },
+            { nom: "CARMILA", code: "CLA", qty: 288, pru: 14.353, cours: 16.620 },
+            { nom: "COVIVIO", code: "COV", qty: 61, pru: 73.376, cours: 53.750 },
+            { nom: "DR.ING", code: "DRI", qty: 0, pru: 76.926, cours: 0.000 },
+            { nom: "LBP.ISR OBL.REV.5D", code: "LPIOR", qty: 5.648, pru: 783.227, cours: 772.520 },
+            { nom: "LBPAM ISR OBL.C 5D", code: "LPBAM", qty: 5, pru: 157.160, cours: 162.170 },
+            { nom: "LCL OB.EUR.D.PC 3D", code: "LCLED", qty: 8.409, pru: 423.800, cours: 612.890 },
+            { nom: "LCL OBL REVTRIM53D", code: "LCLREV", qty: 9.484, pru: 681.690, cours: 661.770 },
+            { nom: "MERCIALYS", code: "MERY", qty: 400, pru: 11.413, cours: 10.740 }
+        ];
+        
+        let especes = 10281.59;
+        const valeurInitiale = 39272.93;
+        
+        // Formatage français
+        function formatEur(num) {
+            if (isNaN(num) || num === null || num === undefined) return "0,00 €";
+            return new Intl.NumberFormat('fr-FR', { 
+                style: 'currency', 
+                currency: 'EUR',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(num);
+        }
+        
+        function formatPct(num) {
+            if (isNaN(num) || num === null || num === undefined) return "0,00%";
+            return (num * 100).toFixed(2).replace('.', ',') + '%';
+        }
+        
+        function calculerManquant() {
+            const rendementPct = parseFloat(document.getElementById('rendementPct').value) || 0;
+            const valeurCible = parseFloat(document.getElementById('valeurCible').value) || 0;
+            const manquant = valeurCible - valeurInitiale;
+            const manquantPct = (manquant / valeurCible) * 100;
+            
+            document.getElementById('manquantEuro').innerText = formatEur(manquant);
+            document.getElementById('manquantPct').innerText = formatPct(manquantPct / 100);
+        }
+        
+        document.getElementById('rendementPct').addEventListener('change', () => {
+            const rendementPct = parseFloat(document.getElementById('rendementPct').value) || 0;
+            const valeurCible = valeurInitiale * (1 + rendementPct / 100);
+            document.getElementById('valeurCible').value = valeurCible.toFixed(2);
+            calculerManquant();
+            renderTable();
+        });
+        
+        document.getElementById('valeurCible').addEventListener('change', () => {
+            const valeurCible = parseFloat(document.getElementById('valeurCible').value) || 0;
+            const rendementPct = ((valeurCible - valeurInitiale) / valeurInitiale) * 100;
+            document.getElementById('rendementPct').value = rendementPct.toFixed(2);
+            calculerManquant();
+            renderTable();
+        });
+        
+        function renderTable() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            
+            let totalValeur = 0;
+            let totalPlusValues = 0;
+            
+            positions.forEach((pos, idx) => {
+                const valeur = pos.qty * pos.cours;
+                const plusValues = valeur - (pos.qty * pos.pru);
+                const perf = pos.qty === 0 ? 0 : (plusValues / (pos.qty * pos.pru));
+                
+                totalValeur += valeur;
+                totalPlusValues += plusValues;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="editable-cell"><span onclick="enableEdit(this, 'nom', ${idx})">${pos.nom}</span></td>
+                    <td class="editable-cell"><span onclick="enableEdit(this, 'code', ${idx})">${pos.code}</span></td>
+                    <td class="number editable-cell"><span onclick="enableEdit(this, 'qty', ${idx})">${pos.qty}</span></td>
+                    <td class="number editable-cell"><span onclick="enableEdit(this, 'pru', ${idx})">${pos.pru.toFixed(3)}</span></td>
+                    <td class="number editable-cell"><span onclick="enableEdit(this, 'cours', ${idx})">${pos.cours.toFixed(3)}</span></td>
+                    <td class="number">${formatEur(valeur)}</td>
+                    <td class="number ${plusValues >= 0 ? 'positive' : 'negative'}">${formatEur(plusValues)}</td>
+                    <td class="number ${pos.qty === 0 ? 'neutral' : (perf >= 0 ? 'positive' : 'negative')}">${pos.qty === 0 ? '-' : formatPct(perf)}</td>
+                    <td><button class="btn-delete" onclick="supprimerLigne(${idx})">×</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // Ligne TOTAL TITRES
+            const totalRow = document.createElement('tr');
+            totalRow.className = 'total-row';
+            totalRow.innerHTML = `
+                <td colspan="5" style="text-align: left;"><strong>TOTAL TITRES</strong></td>
+                <td class="number"><strong>${formatEur(totalValeur)}</strong></td>
+                <td class="number ${totalPlusValues >= 0 ? 'positive' : 'negative'}"><strong>${formatEur(totalPlusValues)}</strong></td>
+                <td class="number ${totalValeur === 0 ? 'neutral' : (totalPlusValues/totalValeur >= 0 ? 'positive' : 'negative')}"><strong>${totalValeur === 0 ? '-' : formatPct(totalPlusValues / totalValeur)}</strong></td>
+                <td></td>
+            `;
+            tableBody.appendChild(totalRow);
+            
+            // Ligne ESPÈCES
+            const especesRow = document.createElement('tr');
+            especesRow.className = 'section-row';
+            especesRow.innerHTML = `
+                <td colspan="5" style="text-align: left;"><strong>ESPÈCES</strong></td>
+                <td class="number editable-cell"><span id="especesDisplay" onclick="enableEditEspeces()">${formatEur(especes)}</span></td>
+                <td colspan="3"></td>
+            `;
+            tableBody.appendChild(especesRow);
+            
+            // Ligne VALEUR TOTALE
+            const globalRow = document.createElement('tr');
+            globalRow.className = 'total-row';
+            const valeurGlobale = totalValeur + especes;
+            globalRow.innerHTML = `
+                <td colspan="5" style="text-align: left;"><strong>VALEUR TOTALE PORTEFEUILLE</strong></td>
+                <td class="number"><strong>${formatEur(valeurGlobale)}</strong></td>
+                <td class="number ${totalPlusValues >= 0 ? 'positive' : 'negative'}"><strong>${formatEur(totalPlusValues)}</strong></td>
+                <td class="number ${valeurGlobale === 0 ? 'neutral' : (totalPlusValues/valeurGlobale >= 0 ? 'positive' : 'negative')}"><strong>${valeurGlobale === 0 ? '-' : formatPct(totalPlusValues / valeurGlobale)}</strong></td>
+                <td></td>
+            `;
+            tableBody.appendChild(globalRow);
+            
+            // Mise à jour de l'en-tête
+            document.getElementById('valeurTotaleActuelle').innerText = formatEur(valeurGlobale);
+            document.getElementById('titresActuels').innerText = formatEur(totalValeur);
+            document.getElementById('especesActuelles').innerText = formatEur(especes);
+            
+            const rendementActuel = ((valeurGlobale - valeurInitiale) / valeurInitiale) * 100;
+            document.getElementById('rendementActuel').innerText = formatPct(rendementActuel / 100);
+            
+            // Ajouter les listeners
+            // Édition au clic (overlay)
+            document.querySelectorAll('td.editable-cell span').forEach(span => {
+                span.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            });
+            
+            // Mode édition espèces
+            const especesDisplay = document.getElementById('especesDisplay');
+            if (especesDisplay) {
+                especesDisplay.addEventListener('dblclick', enableEditEspeces);
+            }
+        }
+        
+        function enableEdit(spanElement, field, idx) {
+            const currentValue = spanElement.innerText;
+            const cell = spanElement.parentElement;
+            
+            spanElement.style.display = 'none';
+            
+            const input = document.createElement('input');
+            input.type = field === 'nom' || field === 'code' ? 'text' : 'number';
+            input.value = currentValue;
+            if (field !== 'nom' && field !== 'code') {
+                input.step = '0.001';
+            }
+            input.className = 'editable';
+            
+            cell.appendChild(input);
+            input.focus();
+            input.select();
+            
+            function saveChange() {
+                const value = field === 'nom' || field === 'code' ? input.value : (parseFloat(input.value) || 0);
+                
+                if (field === 'qty') {
+                    positions[idx].qty = value;
+                } else if (field === 'pru') {
+                    positions[idx].pru = value;
+                } else if (field === 'cours') {
+                    positions[idx].cours = value;
+                } else if (field === 'nom') {
+                    positions[idx].nom = value;
+                } else if (field === 'code') {
+                    positions[idx].code = value;
+                }
+                
+                input.remove();
+                spanElement.style.display = 'block';
+                renderTable();
+            }
+            
+            input.addEventListener('blur', saveChange);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    saveChange();
+                } else if (e.key === 'Escape') {
+                    input.remove();
+                    spanElement.style.display = 'block';
+                }
+            });
+        }
+        
+        function enableEditEspeces() {
+            const display = document.getElementById('especesDisplay');
+            if (!display) return;
+            
+            display.style.display = 'none';
+            const cell = display.parentElement;
+            
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = especes;
+            input.step = '0.01';
+            input.className = 'editable';
+            
+            cell.appendChild(input);
+            input.focus();
+            input.select();
+            
+            function saveespecesChange() {
+                especes = parseFloat(input.value) || 0;
+                input.remove();
+                display.style.display = 'block';
+                renderTable();
+            }
+            
+            input.addEventListener('blur', saveespecesChange);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    saveespecesChange();
+                } else if (e.key === 'Escape') {
+                    input.remove();
+                    display.style.display = 'block';
+                }
+            });
+        }
+        
+        function ajouterLigne() {
+            positions.push({ nom: "NOUVELLE POSITION", code: "NEW", qty: 0, pru: 0, cours: 0 });
+            renderTable();
+        }
+        
+        function supprimerLigne(idx) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette ligne ?')) {
+                positions.splice(idx, 1);
+                renderTable();
+            }
+        }
+        
+        function imprimerTableau() {
+            window.print();
+        }
+        
+        // Render initial
+        renderTable();
+        calculerManquant();
+    </script>
+</body>
+</html>
