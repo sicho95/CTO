@@ -2,987 +2,822 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suivi CTO Sichaumette</title>
+    <title>Portefeuille CTO - Suivi Dynamique</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
-            color: #333;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f7fb;
         }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 30px;
-        }
-        
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-        
-        .header-title {
+        h1 {
             font-size: 24px;
-            font-weight: bold;
-            color: #1a5490;
+            margin-bottom: 5px;
         }
-        
-        .header-subtitle {
-            font-size: 13px;
-            color: #666;
-        }
-        
-        .date-picker-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 5px;
-        }
-        
-        .date-picker-label {
-            font-size: 11px;
-            color: #999;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        #dateActuelle {
-            padding: 8px 12px;
-            border: 2px solid #1a5490;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #1a5490;
-        }
-        
-        .situation-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-        
-        .situation-box {
-            padding: 20px;
-            border-radius: 6px;
-        }
-        
-        .situation-initial {
-            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
-            border-left: 4px solid #1a5490;
-        }
-        
-        .situation-target {
-            background: linear-gradient(135deg, #fff3e0 0%, #fff9f5 100%);
-            border-left: 4px solid #ff9800;
-        }
-        
-        .situation-current {
-            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%);
-            border-left: 4px solid #4caf50;
-        }
-        
-        .situation-box h3 {
-            font-size: 13px;
-            font-weight: bold;
-            text-transform: uppercase;
+        .compte-info {
             margin-bottom: 15px;
-            color: #666;
-            letter-spacing: 0.5px;
+            font-weight: bold;
         }
-        
-        .situation-box .row {
-            margin-bottom: 12px;
+        .section {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .row {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
         }
-        
-        .situation-box .label {
-            font-size: 12px;
-            color: #666;
+        .col {
             flex: 1;
+            min-width: 180px;
+            margin-right: 10px;
+            margin-bottom: 5px;
         }
-        
-        .situation-box .value {
-            font-size: 15px;
-            font-weight: bold;
-            color: #1a1a1a;
-            text-align: right;
-            min-width: 120px;
-        }
-        
-        .situation-initial .value {
-            color: #1a5490;
-        }
-        
-        .situation-target .value {
-            color: #ff9800;
-        }
-        
-        .situation-current .value {
-            color: #4caf50;
-        }
-        
-        .editable-target {
-            background: transparent;
-            border: none;
-            padding: 0;
-            border-radius: 0;
+        .label {
             font-size: 13px;
-            font-weight: bold;
-            text-align: right;
-            cursor: pointer;
-            color: #ff9800;
+            color: #555;
         }
-        
-            max-width: 60px !important;
-        }
-        
-            max-width: 140px !important;
-        }
-        
-        .editable-target:focus {
-            background: #fffbea;
-            border: 1px solid #ffc107;
-            padding: 4px 8px;
-            outline: none;
-        }
-        
-        .table-section {
-            margin-top: 40px;
-        }
-        
-        .table-title {
+        .value {
             font-size: 16px;
             font-weight: bold;
-            margin-bottom: 15px;
-            color: #1a5490;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
-        
-        .table-controls {
-            margin-bottom: 15px;
-            display: flex;
-            gap: 10px;
+        input[type="text"], input[type="number"], input[type="date"] {
+            width: 100%;
+            padding: 4px 6px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
         }
-        
+        input[type="number"] {
+            text-align: right;
+        }
+        .small {
+            font-size: 12px;
+            color: #666;
+        }
+        .highlight {
+            color: #0066cc;
+        }
+        .btn {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 5px;
+        }
         .btn-add {
             background: #4caf50;
             color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
         }
-        
-        .btn-add:hover {
-            background: #45a049;
-        }
-        
         .btn-print {
-            background: #1a5490;
+            background: #2196f3;
             color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
         }
-        
-        .btn-print:hover {
-            background: #0d3a6f;
+        .btn-save {
+            background: #ff9800;
+            color: white;
         }
-        
+        .btn-remove {
+            background: #ff5252;
+            color: white;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            text-align: center;
+            padding: 0;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-top: 10px;
+            background: white;
         }
-        
-        thead {
-            background: #1a5490;
-            color: white;
-        }
-        
-        th {
-            padding: 12px;
-            text-align: left;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border: none;
-        }
-        
-        th.number {
-            text-align: right;
-        }
-        
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #e0e0e0;
+        th, td {
+            border: 1px solid #ddd;
+            padding: 6px 8px;
             font-size: 13px;
         }
-        
-        tbody tr:nth-child(odd) {
-            background: #ffffff;
+        th {
+            background: #eef2fb;
+            text-align: left;
         }
-        
-        tbody tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-        
-        tbody tr:hover {
-            background: #f0f7ff;
-        }
-        
-        .number {
+        td.numeric {
             text-align: right;
-            font-family: 'Courier New', monospace;
         }
-        
-        .positive {
-            color: #4caf50;
-            font-weight: 600;
-        }
-        
-        .negative {
-            color: #d32f2f;
-            font-weight: 600;
-        }
-        
-        .neutral {
-            color: #666;
-        }
-        
-        tr.total-row {
-            background: #ecf0f6 !important;
-            font-weight: bold;
-            border-top: 2px solid #1a5490;
-        }
-        
-        tr.section-row {
-            background: #ecf0f6 !important;
-            font-weight: bold;
-            border-top: 1px solid #ddd;
-        }
-        
-        tr.delete-row {
-            opacity: 0.7;
-        }
-        
-        .btn-delete {
-            background: rgba(211, 47, 47, 0.3);
-            color: #d32f2f;
-            border: none;
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+        td.editable {
             cursor: pointer;
-            font-size: 20px;
-            line-height: 1;
+        }
+        .help {
+            font-size: 12px;
+            color: #555;
+            margin-top: 10px;
+        }
+        .help-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            font-size: 11px;
+            border-radius: 4px;
+            background: #eee;
+            margin-right: 4px;
+        }
+        .negative {
+            color: #c62828;
+        }
+        .positive {
+            color: #2e7d32;
+        }
+        .toolbar {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        /* Modale */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s;
+            z-index: 9999;
         }
-        
-        .btn-delete:hover {
-            background: rgba(211, 47, 47, 0.6);
-        }
-        
-        input.editable {
-            width: 100%;
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-        }
-        
-        td.editable-cell {
-            position: relative;
-            padding: 0;
-        }
-        
-        td.editable-cell span {
-            display: block;
-            padding: 12px;
-            cursor: pointer;
-            min-height: 20px;
-        }
-        
-        td.editable-cell span:hover {
-            background: #f0f7ff;
-        }
-        
-        td.editable-cell input {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 2px solid #1a5490;
-            box-sizing: border-box;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            padding: 6px;
-            z-index: 10;
-        }
-        
-        td.editable-cell input:focus {
-            outline: none;
-        }
-        
-        .mode-emploi {
-            margin-top: 30px;
+        .modal {
+            background: #ffffff;
+            border-radius: 10px;
             padding: 20px;
-            background: #f9f9f9;
-            border-left: 4px solid #1a5490;
-            border-radius: 4px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
         }
-        
-        .mode-emploi h4 {
-            color: #1a5490;
-            margin-bottom: 12px;
-            font-size: 13px;
+        .modal h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
         }
-        
-        .mode-emploi-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        .modal-buttons {
+            margin-top: 15px;
+            text-align: right;
         }
-        
-        .mode-emploi ul {
-            list-style: none;
-            margin-left: 0;
-        }
-        
-        .mode-emploi li {
-            margin-bottom: 8px;
-            padding-left: 20px;
-            position: relative;
-            font-size: 12px;
-            color: #666;
-        }
-        
-        .mode-emploi li:before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: #4caf50;
-            font-weight: bold;
-        }
-        
-        /* PRINT STYLES */
-        @media print {
-            * {
-                box-shadow: none !important;
-            }
-            
-            body {
-                background: white !important;
-                color: black !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            
-            .container {
-                max-width: 100%;
-                margin: 0 !important;
-                padding: 6mm 10mm !important;
-                box-shadow: none !important;
-                border-radius: 0 !important;
-                background: white !important;
-            }
-            
-            .header-top {
-                border-bottom: 2px solid #1a5490 !important;
-                margin-bottom: 15px !important;
-                padding-bottom: 12px !important;
-                display: flex !important;
-                justify-content: space-between !important;
-                align-items: center !important;
-            }
-            
-            .header-title {
-                font-size: 20px !important;
-                font-weight: bold !important;
-                color: #1a5490 !important;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-            }
-            
-            .header-subtitle {
-                font-size: 12px !important;
-                color: #333 !important;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-                font-weight: normal !important;
-            }
-            
-            .date-picker-container {
-                display: none !important;
-            }
-            
-            .situation-container {
-                gap: 12px !important;
-                margin-bottom: 20px !important;
-                grid-template-columns: 1fr 1fr 1fr !important;
-                display: grid !important;
-                page-break-inside: avoid !important;
-            }
-            
-            .situation-box {
-                page-break-inside: avoid !important;
-                padding: 12px !important;
-                border-radius: 4px !important;
-                border: 1px solid #ccc !important;
-            }
-            
-            .situation-initial {
-                background: #f0f4f9 !important;
-                border-left: 4px solid #1a5490 !important;
-            }
-            
-            .situation-target {
-                background: #fff9f0 !important;
-                border-left: 4px solid #ff9800 !important;
-            }
-            
-            .situation-current {
-                background: #f0f9f0 !important;
-                border-left: 4px solid #4caf50 !important;
-            }
-            
-            .situation-box h3 {
-                font-size: 11px !important;
-                font-weight: bold !important;
-                color: #333 !important;
-                text-transform: uppercase !important;
-                margin-bottom: 10px !important;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-            }
-            
-            .situation-box .value {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-                color: #1a1a1a !important;
-                font-weight: bold !important;
-            }
-            
-            .situation-initial .value {
-                color: #1a5490 !important;
-            }
-            
-            .situation-target .value {
-                color: #ff9800 !important;
-            }
-            
-            .situation-current .value {
-                color: #4caf50 !important;
-            }
-            
-            .table-title {
-                font-size: 14px !important;
-                font-weight: bold !important;
-                color: #1a5490 !important;
-                margin-bottom: 10px !important;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-                text-transform: uppercase !important;
-            }
-            
-            thead {
-                background: #1a5490 !important;
-                color: white !important;
-                page-break-after: avoid !important;
-            }
-            
-            th {
-                color: white !important;
-                font-weight: 600 !important;
-                font-size: 10px !important;
-                padding: 8px !important;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-                text-transform: uppercase !important;
-            }
-            
-            tbody tr {
-                page-break-inside: avoid !important;
-            }
-            
-            tbody tr:nth-child(odd) {
-                background: white !important;
-            }
-            
-            tbody tr:nth-child(even) {
-                background: #f9f9f9 !important;
-            }
-            
-            tbody td {
-                padding: 8px !important;
-                border-bottom: 1px solid #ddd !important;
-                font-size: 12px !important;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-                color: #333 !important;
-            }
-            
-            tbody td.number {
-                font-family: 'Courier New', monospace !important;
-                text-align: right !important;
-            }
-            
-            .positive {
-                color: #4caf50 !important;
-                font-weight: 600 !important;
-                font-family: 'Courier New', monospace !important;
-            }
-            
-            .negative {
-                color: #d32f2f !important;
-                font-weight: 600 !important;
-                font-family: 'Courier New', monospace !important;
-            }
-            
-            .neutral {
-                color: #666 !important;
-                font-family: 'Courier New', monospace !important;
-            }
-            
-            tr.total-row {
-                background: #ecf0f6 !important;
-                font-weight: bold !important;
-                border-top: 2px solid #1a5490 !important;
-                page-break-inside: avoid !important;
-            }
-            
-            tr.section-row {
-                background: #ecf0f6 !important;
-                font-weight: bold !important;
-                border-top: 1px solid #ddd !important;
-                page-break-inside: avoid !important;
-            }
-            
-            .table-controls, .mode-emploi, .btn-add, .btn-print, .btn-delete {
-                display: none !important;
-            }
-            
-            table {
-                page-break-inside: auto !important;
-                margin-bottom: 10px !important;
-                border-collapse: collapse !important;
-                width: 100% !important;
-            }
-            
-            td, th {
-                border-bottom: 1px solid #ddd !important;
-            }
-            
-            @page {
-                size: A4 portrait;
-                margin: 6mm 10mm !important;
-            }
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header-top">
-            <div>
-                <div class="header-title">Portefeuille CTO - Suivi Dynamique</div>
-                <div class="header-subtitle">Compte 20001303001 | M. Jean SICHAUMETTE</div>
-            </div>
-            <div class="date-picker-container">
-                <span class="date-picker-label">Date de mise à jour</span>
-                <input type="date" id="dateActuelle" value="2026-01-09">
-            </div>
-        </div>
-        
-        <div class="situation-container">
-            <!-- INITIAL -->
-            <div class="situation-box situation-initial">
-                <h3>Situation Initiale</h3>
-                <div class="row">
-                    <span class="label">Date</span>
-                    <span class="value">07/01/2026</span>
-                </div>
-                <div class="row">
-                    <span class="label">Valeur Totale</span>
-                    <span class="value">39 272,93 €</span>
-                </div>
-                <div class="row">
-                    <span class="label">dont Titres</span>
-                    <span class="value" style="font-size: 13px;">30 693,65 €</span>
-                </div>
-                <div class="row">
-                    <span class="label">dont Espèces</span>
-                    <span class="value" style="font-size: 13px;">8 579,28 €</span>
-                </div>
-            </div>
-            
-            <!-- CIBLE -->
-            <div class="situation-box situation-target">
-                <h3>Cible Objectif</h3>
-                <div class="row">
-                    <span class="label">Rendement %</span>
-                    <input type="number" class="editable-target" id="rendementPct" value="17" step="0.01" min="0">
-                </div>
-                <div class="row">
-                    <span class="label">Valeur Cible</span>
-                    <input type="number" class="editable-target" id="valeurCible" value="45996" step="0.01" min="0">
-                </div>
-                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.1);">
-                    <div class="row">
-                        <span class="label">Manquant (€)</span>
-                        <span class="value" style="font-size: 13px;" id="manquantEuro">6 723,07 €</span>
-                    </div>
-                    <div class="row">
-                        <span class="label">Manquant (%)</span>
-                        <span class="value" style="font-size: 13px;" id="manquantPct">17,10%</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- ACTUELLE -->
-            <div class="situation-box situation-current">
-                <h3>Situation Actuelle</h3>
-                <div class="row">
-                    <span class="label">Valeur Totale</span>
-                    <span class="value" id="valeurTotaleActuelle">39 232,05 €</span>
-                </div>
-                <div class="row">
-                    <span class="label">dont Titres</span>
-                    <span class="value" style="font-size: 13px;" id="titresActuels">28 950,46 €</span>
-                </div>
-                <div class="row">
-                    <span class="label">dont Espèces</span>
-                    <span class="value" style="font-size: 13px;" id="especesActuelles">10 281,59 €</span>
-                </div>
-                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.1);">
-                    <div class="row">
-                        <span class="label">Rendement Actuel</span>
-                        <span class="value" style="font-size: 13px;" id="rendementActuel">-0,10%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="table-section">
-            <div class="table-title">Détail des Positions</div>
-            <div class="table-controls">
-                <button class="btn-add" onclick="ajouterLigne()">+ Ajouter Position</button>
-                <button class="btn-print" onclick="imprimerTableau()">🖨️ Imprimer / PDF</button>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Position</th>
-                        <th>Code</th>
-                        <th class="number">Quantité</th>
-                        <th class="number">PRU (€)</th>
-                        <th class="number">Cours du Jour (€)</th>
-                        <th class="number">Valeur (€)</th>
-                        <th class="number">+/- Values (€)</th>
-                        <th class="number">Perf %</th>
-                        <th style="width: 50px;"></th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="mode-emploi">
-            <h4>💡 Mode d'emploi</h4>
-            <div class="mode-emploi-grid">
-                <ul>
-                    <li><strong>Date :</strong> Choisissez la date mise à jour</li>
-                    <li><strong>Rendement % :</strong> Cible auto-calculée</li>
-                    <li><strong>Valeur Cible :</strong> Rendement auto-calculé</li>
-                    <li><strong>Clic cellule :</strong> Éditer valeur</li>
-                </ul>
-                <ul>
-                    <li><strong>Ajouter :</strong> "+ Ajouter Position"</li>
-                    <li><strong>Supprimer :</strong> Bouton rond rouge</li>
-                    <li><strong>Imprimer :</strong> "🖨️ Imprimer / PDF"</li>
-                    <li><strong>Automatique :</strong> Toutes valeurs recalculées ✓</li>
-                </ul>
+    <h1>Portefeuille CTO - Suivi Dynamique</h1>
+    <div class="compte-info" id="compte-info">
+        Compte <span id="compte-numero">20001303001</span> | <span id="compte-nom">M. Jean SICHAUMETTE</span>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Date de mise à jour</div>
+        <div class="row">
+            <div class="col">
+                <div class="label">Date</div>
+                <input type="date" id="date-mise-a-jour" />
             </div>
         </div>
     </div>
-    
+
+    <div class="section">
+        <div class="section-title">Situation Initiale</div>
+        <div class="row">
+            <div class="col">
+                <div class="label">Valeur Totale</div>
+                <input type="number" id="init-valeur-totale" step="0.01">
+            </div>
+            <div class="col">
+                <div class="label">dont Titres</div>
+                <input type="number" id="init-titres" step="0.01">
+            </div>
+            <div class="col">
+                <div class="label">dont Espèces</div>
+                <input type="number" id="init-especes" step="0.01">
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Cible Objectif</div>
+        <div class="row">
+            <div class="col">
+                <div class="label">Rendement %</div>
+                <input type="number" id="cible-rendement" step="0.01">
+            </div>
+            <div class="col">
+                <div class="label">Valeur Cible</div>
+                <input type="number" id="cible-valeur" step="0.01">
+            </div>
+            <div class="col">
+                <div class="label">Manquant (€)</div>
+                <div class="value" id="cible-manquant-euro">0,00 €</div>
+            </div>
+            <div class="col">
+                <div class="label">Manquant (%)</div>
+                <div class="value" id="cible-manquant-pourcent">0,00%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Situation Actuelle</div>
+        <div class="row">
+            <div class="col">
+                <div class="label">Valeur Totale</div>
+                <div class="value" id="actuel-valeur-totale">0,00 €</div>
+            </div>
+            <div class="col">
+                <div class="label">dont Titres</div>
+                <div class="value" id="actuel-titres">0,00 €</div>
+            </div>
+            <div class="col">
+                <div class="label">dont Espèces</div>
+                <div class="value" id="actuel-especes">0,00 €</div>
+            </div>
+            <div class="col">
+                <div class="label">Rendement Actuel</div>
+                <div class="value" id="actuel-rendement">0,00%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Détail des Positions</div>
+        <div class="toolbar">
+            <button class="btn btn-add" id="btn-add-position">+ Ajouter Position</button>
+            <button class="btn btn-print" id="btn-print">🖨️ Imprimer / PDF</button>
+            <button class="btn btn-save" id="btn-save-json">💾 Sauvegarde</button>
+        </div>
+        <table id="positions-table">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Code</th>
+                    <th>Quantité</th>
+                    <th>PRU (€)</th>
+                    <th>Cours du Jour (€)</th>
+                    <th>Valeur (€)</th>
+                    <th>+/- Values (€)</th>
+                    <th>Perf %</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="positions-body">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">💡 Mode d'emploi</div>
+        <div class="help">
+            <div class="help-title">Date :</div>
+            Choisissez la date de mise à jour du portefeuille.
+        </div>
+        <div class="help">
+            <div class="help-title">Rendement % :</div>
+            La cible est auto-calculée à partir de la situation initiale.
+        </div>
+        <div class="help">
+            <div class="help-title">Valeur Cible :</div>
+            La valeur cible ajuste le rendement cible.
+        </div>
+        <div class="help">
+            <div class="help-title">Clic cellule :</div>
+            Cliquez sur une cellule pour éditer la valeur.
+        </div>
+        <div class="help">
+            <div class="help-title">Ajouter :</div>
+            Utilisez le bouton « + Ajouter Position » pour créer une nouvelle ligne.
+        </div>
+        <div class="help">
+            <div class="help-title">Supprimer :</div>
+            Utilisez le bouton rond rouge à droite de la ligne.
+        </div>
+        <div class="help">
+            <div class="help-title">Imprimer :</div>
+            Utilisez « 🖨️ Imprimer / PDF » pour générer un PDF.
+        </div>
+        <div class="help">
+            <div class="help-title">Sauvegarde :</div>
+            Utilisez « 💾 Sauvegarde » pour exporter un JSON complet du CTO (compte, montants, titres et espèces).
+        </div>
+        <div class="help">
+            <span class="badge">Automatique</span>
+            Toutes les valeurs sont recalculées à chaque modification.
+        </div>
+    </div>
+
     <script>
-        // Données initiales
-        const positions = [
-            { nom: "AGROGENERATION", code: "ALAGR", qty: 0, pru: 0.391, cours: 0.043 },
-            { nom: "CARMILA", code: "CLA", qty: 288, pru: 14.353, cours: 16.620 },
-            { nom: "COVIVIO", code: "COV", qty: 61, pru: 73.376, cours: 53.750 },
-            { nom: "DR.ING", code: "DRI", qty: 0, pru: 76.926, cours: 0.000 },
-            { nom: "LBP.ISR OBL.REV.5D", code: "LPIOR", qty: 5.648, pru: 783.227, cours: 772.520 },
-            { nom: "LBPAM ISR OBL.C 5D", code: "LPBAM", qty: 5, pru: 157.160, cours: 162.170 },
-            { nom: "LCL OB.EUR.D.PC 3D", code: "LCLED", qty: 8.409, pru: 423.800, cours: 612.890 },
-            { nom: "LCL OBL REVTRIM53D", code: "LCLREV", qty: 9.484, pru: 681.690, cours: 661.770 },
-            { nom: "MERCIALYS", code: "MERY", qty: 400, pru: 11.413, cours: 10.740 }
-        ];
-        
-        let especes = 10281.59;
-        const valeurInitiale = 39272.93;
-        
-        // Formatage français
-        function formatEur(num) {
-            if (isNaN(num) || num === null || num === undefined) return "0,00 €";
-            return new Intl.NumberFormat('fr-FR', { 
-                style: 'currency', 
-                currency: 'EUR',
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }).format(num);
+        // --- Constantes clés localStorage ---
+        const STORAGE_KEY = 'cto_portefeuille_data_v1';
+        const DIR_HANDLE_KEY = 'cto_directory_handle_v1';
+
+        // --- Utilitaires de format ---
+        function formatEuro(value) {
+            if (isNaN(value)) return '0,00 €';
+            return value.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
         }
-        
-        function formatPct(num) {
-            if (isNaN(num) || num === null || num === undefined) return "0,00%";
-            return (num * 100).toFixed(2).replace('.', ',') + '%';
+
+        function formatPercent(value) {
+            if (isNaN(value)) return '0,00%';
+            return value.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
         }
-        
-        function calculerManquant() {
-            const rendementPct = parseFloat(document.getElementById('rendementPct').value) || 0;
-            const valeurCible = parseFloat(document.getElementById('valeurCible').value) || 0;
-            const manquant = valeurCible - valeurInitiale;
-            const manquantPct = (manquant / valeurCible) * 100;
-            
-            document.getElementById('manquantEuro').innerText = formatEur(manquant);
-            document.getElementById('manquantPct').innerText = formatPct(manquantPct / 100);
+
+        function parseNumber(value) {
+            if (typeof value === 'number') return value;
+            if (!value) return 0;
+            const normalized = value.replace(/\s/g, '').replace(',', '.').replace('€', '');
+            const n = parseFloat(normalized);
+            return isNaN(n) ? 0 : n;
         }
-        
-        document.getElementById('rendementPct').addEventListener('change', () => {
-            const rendementPct = parseFloat(document.getElementById('rendementPct').value) || 0;
-            const valeurCible = valeurInitiale * (1 + rendementPct / 100);
-            document.getElementById('valeurCible').value = valeurCible.toFixed(2);
-            calculerManquant();
-            renderTable();
-        });
-        
-        document.getElementById('valeurCible').addEventListener('change', () => {
-            const valeurCible = parseFloat(document.getElementById('valeurCible').value) || 0;
-            const rendementPct = ((valeurCible - valeurInitiale) / valeurInitiale) * 100;
-            document.getElementById('rendementPct').value = rendementPct.toFixed(2);
-            calculerManquant();
-            renderTable();
-        });
-        
-        function renderTable() {
-            const tableBody = document.getElementById('tableBody');
-            tableBody.innerHTML = '';
-            
-            let totalValeur = 0;
-            let totalPlusValues = 0;
-            
-            positions.forEach((pos, idx) => {
-                const valeur = pos.qty * pos.cours;
-                const plusValues = valeur - (pos.qty * pos.pru);
-                const perf = pos.qty === 0 ? 0 : (plusValues / (pos.qty * pos.pru));
-                
-                totalValeur += valeur;
-                totalPlusValues += plusValues;
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="editable-cell"><span onclick="enableEdit(this, 'nom', ${idx})">${pos.nom}</span></td>
-                    <td class="editable-cell"><span onclick="enableEdit(this, 'code', ${idx})">${pos.code}</span></td>
-                    <td class="number editable-cell"><span onclick="enableEdit(this, 'qty', ${idx})">${pos.qty}</span></td>
-                    <td class="number editable-cell"><span onclick="enableEdit(this, 'pru', ${idx})">${pos.pru.toFixed(3)}</span></td>
-                    <td class="number editable-cell"><span onclick="enableEdit(this, 'cours', ${idx})">${pos.cours.toFixed(3)}</span></td>
-                    <td class="number">${formatEur(valeur)}</td>
-                    <td class="number ${plusValues >= 0 ? 'positive' : 'negative'}">${formatEur(plusValues)}</td>
-                    <td class="number ${pos.qty === 0 ? 'neutral' : (perf >= 0 ? 'positive' : 'negative')}">${pos.qty === 0 ? '-' : formatPct(perf)}</td>
-                    <td><button class="btn-delete" onclick="supprimerLigne(${idx})">×</button></td>
-                `;
-                tableBody.appendChild(row);
+
+        // --- Gestion des positions ---
+        function createEmptyPosition() {
+            return {
+                id: 'pos_' + Date.now() + '_' + Math.floor(Math.random() * 100000),
+                position: '',
+                code: '',
+                quantite: 0,
+                pru: 0,
+                cours: 0,
+                valeur: 0,
+                plusMoins: 0,
+                perf: 0
+            };
+        }
+
+        function renderPositions(data) {
+            const tbody = document.getElementById('positions-body');
+            tbody.innerHTML = '';
+            data.positions.forEach(pos => {
+                const tr = document.createElement('tr');
+
+                function addCell(property, editable, numeric) {
+                    const td = document.createElement('td');
+                    if (numeric) td.classList.add('numeric');
+                    if (editable) td.classList.add('editable');
+                    td.dataset.id = pos.id;
+                    td.dataset.field = property;
+                    const value = pos[property];
+
+                    if (property === 'valeur') {
+                        td.textContent = formatEuro(value);
+                    } else if (property === 'plusMoins') {
+                        td.textContent = formatEuro(value);
+                        if (value < 0) td.classList.add('negative');
+                        if (value > 0) td.classList.add('positive');
+                    } else if (property === 'perf') {
+                        td.textContent = formatPercent(value);
+                        if (value < 0) td.classList.add('negative');
+                        if (value > 0) td.classList.add('positive');
+                    } else {
+                        td.textContent = value;
+                    }
+
+                    if (editable) {
+                        td.addEventListener('click', () => editCell(td));
+                    }
+                    tr.appendChild(td);
+                }
+
+                addCell('position', true, false);
+                addCell('code', true, false);
+                addCell('quantite', true, true);
+                addCell('pru', true, true);
+                addCell('cours', true, true);
+                addCell('valeur', false, true);
+                addCell('plusMoins', false, true);
+                addCell('perf', false, true);
+
+                const tdRemove = document.createElement('td');
+                tdRemove.classList.add('numeric');
+                const btnRemove = document.createElement('button');
+                btnRemove.className = 'btn btn-remove';
+                btnRemove.textContent = '×';
+                btnRemove.addEventListener('click', () => removePosition(pos.id));
+                tdRemove.appendChild(btnRemove);
+                tr.appendChild(tdRemove);
+
+                tbody.appendChild(tr);
             });
-            
-            // Ligne TOTAL TITRES
-            const totalRow = document.createElement('tr');
-            totalRow.className = 'total-row';
-            totalRow.innerHTML = `
-                <td colspan="5" style="text-align: left;"><strong>TOTAL TITRES</strong></td>
-                <td class="number"><strong>${formatEur(totalValeur)}</strong></td>
-                <td class="number ${totalPlusValues >= 0 ? 'positive' : 'negative'}"><strong>${formatEur(totalPlusValues)}</strong></td>
-                <td class="number ${totalValeur === 0 ? 'neutral' : (totalPlusValues/totalValeur >= 0 ? 'positive' : 'negative')}"><strong>${totalValeur === 0 ? '-' : formatPct(totalPlusValues / totalValeur)}</strong></td>
-                <td></td>
-            `;
-            tableBody.appendChild(totalRow);
-            
-            // Ligne ESPÈCES
-            const especesRow = document.createElement('tr');
-            especesRow.className = 'section-row';
-            especesRow.innerHTML = `
-                <td colspan="5" style="text-align: left;"><strong>ESPÈCES</strong></td>
-                <td class="number editable-cell"><span id="especesDisplay" onclick="enableEditEspeces()">${formatEur(especes)}</span></td>
-                <td colspan="3"></td>
-            `;
-            tableBody.appendChild(especesRow);
-            
-            // Ligne VALEUR TOTALE
-            const globalRow = document.createElement('tr');
-            globalRow.className = 'total-row';
-            const valeurGlobale = totalValeur + especes;
-            globalRow.innerHTML = `
-                <td colspan="5" style="text-align: left;"><strong>VALEUR TOTALE PORTEFEUILLE</strong></td>
-                <td class="number"><strong>${formatEur(valeurGlobale)}</strong></td>
-                <td class="number ${totalPlusValues >= 0 ? 'positive' : 'negative'}"><strong>${formatEur(totalPlusValues)}</strong></td>
-                <td class="number ${valeurGlobale === 0 ? 'neutral' : (totalPlusValues/valeurGlobale >= 0 ? 'positive' : 'negative')}"><strong>${valeurGlobale === 0 ? '-' : formatPct(totalPlusValues / valeurGlobale)}</strong></td>
-                <td></td>
-            `;
-            tableBody.appendChild(globalRow);
-            
-            // Mise à jour de l'en-tête
-            document.getElementById('valeurTotaleActuelle').innerText = formatEur(valeurGlobale);
-            document.getElementById('titresActuels').innerText = formatEur(totalValeur);
-            document.getElementById('especesActuelles').innerText = formatEur(especes);
-            
-            const rendementActuel = ((valeurGlobale - valeurInitiale) / valeurInitiale) * 100;
-            document.getElementById('rendementActuel').innerText = formatPct(rendementActuel / 100);
-            
-            // Ajouter les listeners
-            // Édition au clic (overlay)
-            document.querySelectorAll('td.editable-cell span').forEach(span => {
-                span.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                });
-            });
-            
-            // Mode édition espèces
-            const especesDisplay = document.getElementById('especesDisplay');
-            if (especesDisplay) {
-                especesDisplay.addEventListener('dblclick', enableEditEspeces);
-            }
         }
-        
-        function enableEdit(spanElement, field, idx) {
-            const currentValue = spanElement.innerText;
-            const cell = spanElement.parentElement;
-            
-            spanElement.style.display = 'none';
-            
+
+        function editCell(td) {
+            const currentValue = td.textContent.trim();
+            const isNumeric = td.classList.contains('numeric') || ['quantite','pru','cours'].includes(td.dataset.field);
             const input = document.createElement('input');
-            input.type = field === 'nom' || field === 'code' ? 'text' : 'number';
-            input.value = currentValue;
-            if (field !== 'nom' && field !== 'code') {
-                input.step = '0.001';
-            }
-            input.className = 'editable';
-            
-            cell.appendChild(input);
+            input.type = isNumeric ? 'number' : 'text';
+            input.value = isNumeric ? parseNumber(currentValue) : currentValue;
+            input.style.width = '100%';
+            td.innerHTML = '';
+            td.appendChild(input);
             input.focus();
             input.select();
-            
-            function saveChange() {
-                const value = field === 'nom' || field === 'code' ? input.value : (parseFloat(input.value) || 0);
-                
-                if (field === 'qty') {
-                    positions[idx].qty = value;
-                } else if (field === 'pru') {
-                    positions[idx].pru = value;
-                } else if (field === 'cours') {
-                    positions[idx].cours = value;
-                } else if (field === 'nom') {
-                    positions[idx].nom = value;
-                } else if (field === 'code') {
-                    positions[idx].code = value;
+
+            input.addEventListener('blur', () => {
+                const newValue = input.value;
+                const id = td.dataset.id;
+                const field = td.dataset.field;
+                const data = loadData();
+                const pos = data.positions.find(p => p.id === id);
+                if (!pos) return;
+
+                if (['quantite','pru','cours'].includes(field)) {
+                    pos[field] = parseNumber(newValue);
+                } else {
+                    pos[field] = newValue;
                 }
-                
-                input.remove();
-                spanElement.style.display = 'block';
-                renderTable();
-            }
-            
-            input.addEventListener('blur', saveChange);
+
+                recalcPosition(pos);
+                recalcGlobal(data);
+                saveData(data);
+                renderAll(data);
+            });
+
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
-                    saveChange();
-                } else if (e.key === 'Escape') {
-                    input.remove();
-                    spanElement.style.display = 'block';
+                    input.blur();
                 }
             });
         }
-        
-        function enableEditEspeces() {
-            const display = document.getElementById('especesDisplay');
-            if (!display) return;
-            
-            display.style.display = 'none';
-            const cell = display.parentElement;
-            
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.value = especes;
-            input.step = '0.01';
-            input.className = 'editable';
-            
-            cell.appendChild(input);
-            input.focus();
-            input.select();
-            
-            function saveespecesChange() {
-                especes = parseFloat(input.value) || 0;
-                input.remove();
-                display.style.display = 'block';
-                renderTable();
+
+        function recalcPosition(pos) {
+            pos.valeur = pos.quantite * pos.cours;
+            const investi = pos.quantite * pos.pru;
+            pos.plusMoins = pos.valeur - investi;
+            pos.perf = investi !== 0 ? (pos.plusMoins / investi) * 100 : 0;
+        }
+
+        function recalcAllPositions(data) {
+            data.positions.forEach(recalcPosition);
+        }
+
+        function recalcGlobal(data) {
+            let totalTitres = 0;
+            data.positions.forEach(p => { totalTitres += p.valeur; });
+            data.situationActuelle.titres = totalTitres;
+
+            const init = data.situationInitiale;
+            // Espèces = valeur totale actuelle - valeur titres
+            data.situationActuelle.especes = data.situationActuelle.valeurTotale - totalTitres;
+            if (isNaN(data.situationActuelle.especes)) data.situationActuelle.especes = 0;
+
+            // Rendement actuel par rapport à la situation initiale
+            const investiInitial = init.valeurTotale;
+            if (investiInitial && investiInitial !== 0) {
+                const diff = data.situationActuelle.valeurTotale - investiInitial;
+                data.situationActuelle.rendement = (diff / investiInitial) * 100;
+            } else {
+                data.situationActuelle.rendement = 0;
             }
-            
-            input.addEventListener('blur', saveespecesChange);
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    saveespecesChange();
-                } else if (e.key === 'Escape') {
-                    input.remove();
-                    display.style.display = 'block';
-                }
+
+            // Objectif
+            const cible = data.cible;
+            cible.valeurCible = investiInitial * (1 + (cible.rendement / 100));
+            const manquant = cible.valeurCible - data.situationActuelle.valeurTotale;
+            cible.manquantEuro = manquant;
+            cible.manquantPourcent = data.situationActuelle.valeurTotale !== 0 ?
+                (manquant / data.situationActuelle.valeurTotale) * 100 : 0;
+        }
+
+        function renderGlobal(data) {
+            document.getElementById('compte-numero').textContent = data.compte.numero;
+            document.getElementById('compte-nom').textContent = data.compte.nom;
+            document.getElementById('date-mise-a-jour').value = data.dateMiseAJour || '';
+
+            document.getElementById('init-valeur-totale').value = data.situationInitiale.valeurTotale;
+            document.getElementById('init-titres').value = data.situationInitiale.titres;
+            document.getElementById('init-especes').value = data.situationInitiale.especes;
+
+            document.getElementById('cible-rendement').value = data.cible.rendement;
+            document.getElementById('cible-valeur').value = data.cible.valeurCible;
+
+            document.getElementById('actuel-valeur-totale').textContent = formatEuro(data.situationActuelle.valeurTotale);
+            document.getElementById('actuel-titres').textContent = formatEuro(data.situationActuelle.titres);
+            document.getElementById('actuel-especes').textContent = formatEuro(data.situationActuelle.especes);
+            document.getElementById('actuel-rendement').textContent = formatPercent(data.situationActuelle.rendement);
+
+            document.getElementById('cible-manquant-euro').textContent = formatEuro(data.cible.manquantEuro);
+            document.getElementById('cible-manquant-pourcent').textContent = formatPercent(data.cible.manquantPourcent);
+        }
+
+        function renderAll(data) {
+            renderGlobal(data);
+            renderPositions(data);
+        }
+
+        function removePosition(id) {
+            const data = loadData();
+            data.positions = data.positions.filter(p => p.id !== id);
+            recalcAllPositions(data);
+            recalcGlobal(data);
+            saveData(data);
+            renderAll(data);
+        }
+
+        // --- Persistance localStorage ---
+        function defaultData() {
+            return {
+                compte: {
+                    numero: '20001303001',
+                    nom: 'M. Jean SICHAUMETTE'
+                },
+                dateMiseAJour: '',
+                situationInitiale: {
+                    valeurTotale: 0,
+                    titres: 0,
+                    especes: 0
+                },
+                cible: {
+                    rendement: 0,
+                    valeurCible: 0,
+                    manquantEuro: 0,
+                    manquantPourcent: 0
+                },
+                situationActuelle: {
+                    valeurTotale: 0,
+                    titres: 0,
+                    especes: 0,
+                    rendement: 0
+                },
+                positions: [],
+                lastUpdated: Date.now()
+            };
+        }
+
+        function loadData() {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return defaultData();
+            try {
+                const data = JSON.parse(raw);
+                if (!data.positions) data.positions = [];
+                if (!data.compte) data.compte = { numero: '', nom: '' };
+                if (typeof data.lastUpdated !== 'number') data.lastUpdated = Date.now();
+                return data;
+            } catch (e) {
+                return defaultData();
+            }
+        }
+
+        function saveData(data) {
+            data.lastUpdated = Date.now();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        // --- Gestion des champs "form" pour maj data ---
+        function attachFormEvents() {
+            const data = loadData();
+            document.getElementById('date-mise-a-jour').addEventListener('change', (e) => {
+                const d = loadData();
+                d.dateMiseAJour = e.target.value;
+                recalcAllPositions(d);
+                recalcGlobal(d);
+                saveData(d);
+                renderAll(d);
+            });
+
+            document.getElementById('init-valeur-totale').addEventListener('change', (e) => {
+                const d = loadData();
+                d.situationInitiale.valeurTotale = parseNumber(e.target.value);
+                recalcAllPositions(d);
+                recalcGlobal(d);
+                saveData(d);
+                renderAll(d);
+            });
+
+            document.getElementById('init-titres').addEventListener('change', (e) => {
+                const d = loadData();
+                d.situationInitiale.titres = parseNumber(e.target.value);
+                recalcAllPositions(d);
+                recalcGlobal(d);
+                saveData(d);
+                renderAll(d);
+            });
+
+            document.getElementById('init-especes').addEventListener('change', (e) => {
+                const d = loadData();
+                d.situationInitiale.especes = parseNumber(e.target.value);
+                recalcAllPositions(d);
+                recalcGlobal(d);
+                saveData(d);
+                renderAll(d);
+            });
+
+            document.getElementById('cible-rendement').addEventListener('change', (e) => {
+                const d = loadData();
+                d.cible.rendement = parseNumber(e.target.value);
+                recalcAllPositions(d);
+                recalcGlobal(d);
+                saveData(d);
+                renderAll(d);
+            });
+
+            document.getElementById('cible-valeur').addEventListener('change', (e) => {
+                const d = loadData();
+                d.cible.valeurCible = parseNumber(e.target.value);
+                recalcAllPositions(d);
+                recalcGlobal(d);
+                saveData(d);
+                renderAll(d);
             });
         }
-        
-        function ajouterLigne() {
-            positions.push({ nom: "NOUVELLE POSITION", code: "NEW", qty: 0, pru: 0, cours: 0 });
-            renderTable();
+
+        // --- Export JSON complet ---
+        function exportJson() {
+            const data = loadData();
+            recalcAllPositions(data);
+            recalcGlobal(data);
+            data.lastUpdated = Date.now();
+
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const min = String(now.getMinutes()).padStart(2, '0');
+            const filename = `CTO_${yyyy}-${mm}-${dd}-${hh}${min}.json`;
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
         }
-        
-        function supprimerLigne(idx) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette ligne ?')) {
-                positions.splice(idx, 1);
-                renderTable();
+
+        // --- Import depuis un fichier JSON (handle) ---
+        async function importFromFileHandle(fileHandle) {
+            const file = await fileHandle.getFile();
+            const text = await file.text();
+            let json;
+            try {
+                json = JSON.parse(text);
+            } catch (e) {
+                console.error('JSON invalide', e);
+                return;
             }
+            if (!json || typeof json !== 'object') return;
+
+            const local = loadData();
+            const jsonTs = typeof json.lastUpdated === 'number' ? json.lastUpdated : 0;
+            const localTs = typeof local.lastUpdated === 'number' ? local.lastUpdated : 0;
+
+            if (jsonTs <= localTs) {
+                // Local plus récent, on ne fait rien
+                return;
+            }
+
+            // Remplacement complet par le JSON (tout : compte, montants, cibles, positions)
+            const merged = {
+                compte: json.compte || local.compte,
+                dateMiseAJour: json.dateMiseAJour || local.dateMiseAJour,
+                situationInitiale: json.situationInitiale || local.situationInitiale,
+                cible: json.cible || local.cible,
+                situationActuelle: json.situationActuelle || local.situationActuelle,
+                positions: Array.isArray(json.positions) ? json.positions : local.positions,
+                lastUpdated: jsonTs || Date.now()
+            };
+
+            saveData(merged);
+            renderAll(merged);
         }
-        
-        function imprimerTableau() {
+
+        // --- Gestion du dossier via File System Access API ---
+        async function getDirectoryHandle() {
+            // On ne peut pas directement sérialiser un DirectoryHandle (structured clone uniquement),
+            // donc on le stocke via localStorage en utilisant l'API moderne (si supportée)
+            // Ici : on stocke juste un flag, et on redemande si nécessaire.
+            return await window.showDirectoryPicker({
+                id: 'cto-folder',
+                mode: 'readwrite'
+            });
+        }
+
+        async function findLatestCtoJson(dirHandle) {
+            let latestHandle = null;
+            let latestTime = 0;
+
+            for await (const [name, handle] of dirHandle.entries()) {
+                if (handle.kind === 'file' && /^CTO_\d{4}-\d{2}-\d{2}-\d{4}\.json$/.test(name)) {
+                    const file = await handle.getFile();
+                    let ts = 0;
+                    try {
+                        const text = await file.text();
+                        const data = JSON.parse(text);
+                        ts = typeof data.lastUpdated === 'number' ? data.lastUpdated : file.lastModified;
+                    } catch (e) {
+                        ts = file.lastModified;
+                    }
+                    if (ts > latestTime) {
+                        latestTime = ts;
+                        latestHandle = handle;
+                    }
+                }
+            }
+
+            return { latestHandle, latestTime };
+        }
+
+        function showUpdateModal(onConfirm, message) {
+            const backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop';
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+
+            modal.innerHTML = `
+                <h3>Mise à jour détectée</h3>
+                <p>${message}</p>
+                <div class="modal-buttons">
+                    <button class="btn btn-secondary" id="modal-cancel">Annuler</button>
+                    <button class="btn btn-save" id="modal-confirm">Mettre à jour</button>
+                </div>
+            `;
+            backdrop.appendChild(modal);
+            document.body.appendChild(backdrop);
+
+            modal.querySelector('#modal-cancel').addEventListener('click', () => {
+                document.body.removeChild(backdrop);
+            });
+
+            modal.querySelector('#modal-confirm').addEventListener('click', async () => {
+                await onConfirm();
+                document.body.removeChild(backdrop);
+            });
+        }
+
+        async function autoCheckJsonOnStartup() {
+            if (!('showDirectoryPicker' in window)) {
+                return; // Pas supporté (Safari/Firefox)
+            }
+
+            // On garde le handle en mémoire globale (page courante)
+            if (!window._ctoDirectoryHandle) {
+                try {
+                    window._ctoDirectoryHandle = await getDirectoryHandle();
+                } catch (e) {
+                    console.warn('Dossier CTO non défini', e);
+                    return;
+                }
+            }
+
+            const dirHandle = window._ctoDirectoryHandle;
+            const local = loadData();
+            const localTs = typeof local.lastUpdated === 'number' ? local.lastUpdated : 0;
+
+            const { latestHandle, latestTime } = await findLatestCtoJson(dirHandle);
+            if (!latestHandle || latestTime <= localTs) {
+                return; // Rien de plus récent
+            }
+
+            const msg = `Un fichier JSON CTO plus récent a été trouvé dans le dossier. 
+Souhaitez-vous mettre à jour le portefeuille avec ce fichier ?`;
+
+            showUpdateModal(async () => {
+                await importFromFileHandle(latestHandle);
+            }, msg.replace(/\n/g, '<br>'));
+        }
+
+        // --- Impression ---
+        function printPage() {
             window.print();
         }
-        
-        // Render initial
-        renderTable();
-        calculerManquant();
+
+        // --- Initialisation ---
+        window.addEventListener('load', async () => {
+            let data = loadData();
+            recalcAllPositions(data);
+            recalcGlobal(data);
+            renderAll(data);
+            attachFormEvents();
+
+            document.getElementById('btn-add-position').addEventListener('click', () => {
+                const d = loadData();
+                d.positions.push(createEmptyPosition());
+                recalcAllPositions(d);
+                recalcGlobal(d);
+                saveData(d);
+                renderAll(d);
+            });
+
+            document.getElementById('btn-print').addEventListener('click', printPage);
+            document.getElementById('btn-save-json').addEventListener('click', exportJson);
+
+            // Auto-check JSON plus récent dans le dossier choisi
+            await autoCheckJsonOnStartup();
+        });
     </script>
 </body>
 </html>
