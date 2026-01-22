@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suivi Portefeuille</title>
+  <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background: #f5f5f5;
+          padding: 20px;
+          color: #333;
+      }
+      
+      .container {
+          max-width: 1400px;
+          margin: 0 auto;
+          background: white;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          padding: 30px;
+      }
+      
+      .header-top {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 30px;
+          padding-bottom: 20px;
+          border-bottom: 2px solid #e0e0e0;
+      }
+      
+      .header-title { font-size: 24px; font-weight: bold; color: #1a5490; }
+      .header-subtitle { font-size: 13px; color: #666; }
+      
+      .date-picker-container {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 5px;
+      }
+      
+      .date-picker-label {
+          font-size: 11px;
+          color: #999;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+      }
+      
+      .situation-container {
+          display: grid;
+          grid-template-columns: 1fr 1.15fr 1fr;
+          gap: 25px;
+          margin-bottom: 40px;
+      }
+      
+      .situation-box { padding: 14px; border-radius: 6px; }
+      
+      .situation-initial {
+          background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+          border-left: 4px solid #1a5490;
+      }
+      .situation-target {
+          background: linear-gradient(135deg, #fff3e0 0%, #fff9f5 100%);
+          border-left: 4px solid #ff9800;
+      }
+      .situation-current {
+          background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%);
+          border-left: 4px solid #4caf50;
+      }
+      
+      .situation-box h3 {
+          font-size: 13px;
+          font-weight: bold;
+          text-transform: uppercase;
+          margin-bottom: 15px;
+          color: #666;
+          letter-spacing: 0.5px;
+      }
+      
+      .situation-box .row {
+          margin-bottom: 7px;
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          gap: 10px;
+          flex-wrap: nowrap;
+      }
+      
+      /* Resserre UNIQUEMENT la Situation Initiale (comme demandé) */
+      .situation-initial .row {
+          margin-bottom: 4px;
+      }
+      
+      .situation-box .label {
+          font-size: 11px;
+          color: #666;
+          white-space: nowrap;
+          flex: 0 0 auto;
+          max-width: 62%;
+      }
+      
+      .situation-box .value {
+          font-size: 14px;
+          font-weight: bold;
+          color: #1a1a1a;
+          text-align: right;
+          min-width: 120px;
+          white-space: nowrap;
+          flex: 0 0 auto;
+      }
+      
+      .situation-initial .value { color: #1a5490; }
+      .situation-target .value { color: #ff9800; }
+      .situation-current .value { color: #4caf50; }
+      
+      /* Trait de démarcation + marge réduite sous le trait */
+      .divider {
+          margin: 8px 0 4px 0;
+          padding-top: 8px;
+          border-top: 1px solid rgba(0,0,0,0.1);
+      }
+      
+      .table-section { margin-top: 40px; }
+      
+      .table-title {
+          font-size: 16px;
+          font-weight: bold;
+          margin-bottom: 15px;
+          color: #1a5490;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+      }
+      
+      .table-controls { margin-bottom: 15px; display: flex; gap: 10px; }
+      
+      .btn-add {
+          background: #4caf50;
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 12px;
+          font-weight: bold;
+          text-transform: uppercase;
+      }
+      .btn-add:hover { background: #45a049; }
+      
+      .btn-print {
+          background: #1a5490;
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 12px;
+          font-weight: bold;
+          text-transform: uppercase;
+      }
+      .btn-print:hover { background: #0d3a6f; }
+      
+      .btn-sync {
+          background: #2196F3;
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 12px;
+          font-weight: bold;
+          text-transform: uppercase;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          transition: background 0.2s;
+      }
+      .btn-sync:hover { background: #1976D2; }
+      .btn-sync .icon { font-size: 14px; }
+      
+      table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+      
+      thead { background: #1a5490 !important; color: white !important; }
+      
+      th {
+          color: white !important;
+          background: #1a5490 !important;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+          font-size: 11px !important;
+          font-weight: 600 !important;
+          padding: 6px;
+          text-align: left;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          border: none;
+      }
+      th.number { text-align: right; }
+      
+      td {
+          padding: 6px;
+          border-bottom: 1px solid #e0e0e0;
+          font-size: 13px;
+      }
+      
+      tbody tr:nth-child(odd) { background: #ffffff; }
+      tbody tr:nth-child(even) { background: #f9f9f9; }
+      tbody tr:hover { background: #f0f7ff; }
+      
+      .number { text-align: right; font-family: 'Courier New', monospace; }
+      .positive { color: #4caf50; font-weight: 600; }
+      .negative { color: #d32f2f; font-weight: 600; }
+      .neutral { color: #666; }
+      
+      tr.total-row {
+          background: #ecf0f6 !important;
+          font-weight: bold;
+          border-top: 2px solid #1a5490;
+      }
+      tr.section-row {
+          background: #ecf0f6 !important;
+          font-weight: bold;
+          border-top: 1px solid #ddd;
+      }
+      
+      .btn-delete {
+          background: rgba(211, 47, 47, 0.3);
+          color: #d32f2f;
+          border: none;
+          padding: 0;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          cursor: pointer;
+          font-size: 14px;
+          line-height: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background 0.2s;
+      }
+      .btn-delete:hover { background: rgba(211, 47, 47, 0.6); }
+      
+      input.editable {
+          width: 100%;
+          padding: 6px;
+          border: 1px solid #ccc;
+          border-radius: 3px;
+          font-family: 'Courier New', monospace;
+          font-size: 13px;
+      }
+      
+      td.editable-cell { position: relative; padding: 0; }
+      td.editable-cell span { display: block; padding: 6px; cursor: pointer; min-height: 20px; }
+      td.editable-cell span:hover { background: #f0f7ff; }
+      
+      td.editable-cell input {
+          position: absolute;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          border: 2px solid #1a5490;
+          box-sizing: border-box;
+          font-family: 'Courier New', monospace;
+          font-size: 13px;
+          padding: 6px;
+          z-index: 10;
+      }
+      td.editable-cell input:focus { outline: none; }
+      
+      .editable-inline {
+          cursor: pointer;
+          padding: 2px 6px;
+          border-radius: 4px;
+          transition: background 0.15s;
+          display: inline-block;
+      }
+      .editable-inline:hover { background: rgba(33,150,243,0.06); }
+      .editable-inline.editing { background: transparent; padding: 0; }
+      .editable-inline.editing input {
+          border: 2px solid #2196f3;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: inherit;
+          font-family: inherit;
+          font-weight: inherit;
+          color: inherit;
+          background: white;
+          outline: none;
+          width: auto;
+          min-width: 120px;
+      }
+      
+      .mode-emploi {
+          margin-top: 30px;
+          padding: 20px;
+          background: #f9f9f9;
+          border-left: 4px solid #1a5490;
+          border-radius: 4px;
+      }
+      .mode-emploi h4 { color: #1a5490; margin-bottom: 12px; font-size: 13px; }
+      .mode-emploi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+      .mode-emploi ul { list-style: none; margin-left: 0; }
+      .mode-emploi li {
+          margin-bottom: 8px;
+          padding-left: 20px;
+          position: relative;
+          font-size: 12px;
+          color: #666;
+      }
+      .mode-emploi li:before {
+          content: '✓';
+          position: absolute;
+          left: 0;
+          color: #4caf50;
+          font-weight: bold;
+      }
+      
+      @media print {
+          .table-controls, .mode-emploi, .btn-add, .btn-print, .btn-delete, .btn-sync { display: none !important; }
+          body { background: white !important; color: black !important; padding: 2mm !important; margin: 0 !important; }
+          .container { max-width: 100%; margin: 0 !important; padding: 4mm 6mm !important; box-shadow: none !important; }
+          thead th { color: #fff !important; -webkit-text-fill-color: #fff !important; background: #1a5490 !important; }
+      }
+      
+      .footer {
+          margin-top: 8px;
+          text-align: center;
+          font-size: 13px;
+          color: #666;
+      }
+      .footer-text { font: inherit; color: inherit; }
+      
+      /* ====== MOBILE ONLY (<=768px) : cartouches repliables + largeur écran ====== */
+      .situation-summary { display: none; }
+      .situation-summary-value { font-weight: 700; }
+
+      /* wrapper pour pouvoir masquer/afficher sans toucher au style existant */
+      .situation-details { display: block; }
+
+      @media (max-width: 768px) {
+        /* largeur page = largeur écran */
+        body { padding: 0; }
+        .container {
+          max-width: none;
+          width: 100%;
+          margin: 0;
+          border-radius: 0;
+          padding: 12px; /* léger gain sans “refaire” le design */
+        }
+
+        /* cartouches : rester sur 3 colonnes mais plus serrées */
+        .situation-container {
+          grid-template-columns: 1fr 1fr 1fr; /* force 3 colonnes */
+          gap: 10px;                          /* réduit l'espace entre cartouches */
+          margin-bottom: 20px;                /* réduit l'espace sous cartouches */
+        }
+
+        .situation-box {
+          padding: 10px;                      /* légèrement plus compact */
+          cursor: pointer;
+        }
+
+        /* réduire espace label/valeur (sans changer la typo globale) */
+        .row { padding: 4px 0; }
+        .row .label { padding-right: 6px; }
+
+        /* état replié : afficher uniquement titre + valeur principale */
+        .situation-box.collapsed .situation-details { display: none; }
+        .situation-box.collapsed .situation-summary { display: block; }
+
+        .situation-summary {
+          margin-top: 6px;
+        }
+
+        /* tableau : forcer l'affichage complet en largeur */
+        .table-section { overflow-x: hidden; }
+        table { width: 100%; table-layout: fixed; }
+        th, td { padding: 6px 6px; font-size: 11px; }
+        th { white-space: normal; }
+
+        /* éviter que “Position” explose la largeur */
+        td:nth-child(2), th:nth-child(2) {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+      
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header-top">
+      <div>
+        <div class="header-title">
+          <span class="editable-inline" id="titre-app" data-field="titre">Mon Portefeuille</span>
+        </div>
+        <div class="header-subtitle">
+          Compte
+          <span class="editable-inline" id="compte-num" data-field="compteNum">Numéro Compte</span>
+          -
+          <span class="editable-inline" id="compte-nom" data-field="compteNom">Nom Titulaire</span>
+        </div>
+      </div>
+      <div class="date-picker-container">
+        <span class="date-picker-label">Date de mise à jour</span>
+        <span class="value">
+          <span class="editable-inline" id="dateActuelle" data-field="initDate" data-type="dateJJMMAAAA">JJ/MM/AAAA</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="situation-container">
+      <!-- SITUATION INITIALE -->
+      <div class="situation-box situation-initial">
+        <h3>Situation Initiale</h3>
+        <!-- Compact (mobile replié) -->
+        <div class="situation-summary">
+          <div class="situation-summary-value" data-compact-for="initial">0,00 €</div>
+        </div>
+
+        <!-- Détail (desktop + mobile déplié) -->
+        <div class="situation-details">
+
+        <div class="row">
+          <span class="label">Date</span>
+          <span class="value">
+            <span class="editable-inline" id="init-date" data-field="initDate" data-type="dateJJMMAAAA">JJ/MM/AAAA</span>
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Valeur Totale</span>
+          <span class="value">
+            <span class="editable-inline" id="init-total" data-field="initTotal" data-type="euro">0,00 €</span>
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">dont Titres</span>
+          <span class="value">
+            <span class="editable-inline" id="init-titres" data-field="initTitres" data-type="euro">0,00 €</span>
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">dont Espèces</span>
+          <span class="value">
+            <span class="editable-inline" id="init-especes" data-field="initEspeces" data-type="euro">0,00 €</span>
+          </span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+          <span class="label">Apport annuel</span>
+          <span class="value">
+            <span class="editable-inline" id="apport-annuel" data-field="apportAnnuel" data-type="euro">0,00 €</span>
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Valeur Totale</span>
+          <span class="value" id="valeur-totale-init">0,00 €</span>
+        </div>
+      </div>
+    </div>
+
+      <!-- CIBLE OBJECTIF -->
+      <div class="situation-box situation-target">
+        <h3>Cible Objectif</h3>
+        <!-- Compact (mobile replié) -->
+        <div class="situation-summary">
+          <div class="situation-summary-value" data-compact-for="target">0,00 €</div>
+        </div>
+
+        <!-- Détail (desktop + mobile déplié) -->
+        <div class="situation-details">
+
+        <div class="row">
+          <span class="label">Rendement %</span>
+          <span class="value">
+            <span class="editable-inline" id="rendementPct" data-type="pct">0,00 %</span>
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Valeur Cible</span>
+          <span class="value">
+            <span class="editable-inline" id="valeurCible" data-type="euro">0,00 €</span>
+          </span>
+        </div>
+
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.1);">
+          <div class="row">
+            <span class="label">Manquant (€)</span>
+            <span class="value" style="font-size: 13px;" id="manquantEuro">0,00 €</span>
+          </div>
+          <div class="row">
+            <span class="label">Manquant (%)</span>
+            <span class="value" style="font-size: 13px;" id="manquantPct">0,00 %</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <!-- SITUATION ACTUELLE -->
+      <div class="situation-box situation-current">
+        <h3>Situation Actuelle</h3>
+        <!-- Compact (mobile replié) -->
+        <div class="situation-summary">
+          <div class="situation-summary-value" data-compact-for="current">0,00 €</div>
+        </div>
+
+        <!-- Détail (desktop + mobile déplié) -->
+        <div class="situation-details">
+
+        <div class="row">
+          <span class="label">Valeur Totale</span>
+          <span class="value" id="valeurTotaleActuelle">0,00 €</span>
+        </div>
+
+        <div class="row">
+          <span class="label">dont Titres</span>
+          <span class="value" id="titresActuels">0,00 €</span>
+        </div>
+
+        <div class="row">
+          <span class="label">dont Espèces</span>
+          <span class="value" id="especesActuelles">0,00 €</span>
+        </div>
+
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.1);">
+          <div class="row">
+            <span class="label">Rendement Actuel</span>
+            <span class="value" style="font-size: 13px;" id="rendementActuel">0,00 %</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div class="table-section">
+      <div class="table-title">Détail des Positions</div>
+      <div class="table-controls">
+        <button class="btn-add" onclick="ajouterLigne()">+ Ajouter Position</button>
+        <button class="btn-print" onclick="imprimerTableau()">🖨️ Imprimer / PDF</button>
+        <button class="btn-sync" onclick="handleSync()" title="Synchroniser avec dossier local">
+          <span class="icon">⚙️</span>
+          <span>Synchronisation</span>
+        </button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Position</th>
+            <th>Code</th>
+            <th class="number">Quantité</th>
+            <th class="number">PRU (€)</th>
+            <th class="number">Cours du Jour (€)</th>
+            <th class="number">Valeur (€)</th>
+            <th class="number">+/- Values (€)</th>
+            <th class="number">Perf %</th>
+            <th style="width: 50px;"></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="mode-emploi">
+      <h4>💡 Mode d'emploi</h4>
+      <div class="mode-emploi-grid">
+        <ul>
+          <li><strong>Date :</strong> Choisissez la date mise à jour</li>
+          <li><strong>Rendement % :</strong> Cible auto-calculée</li>
+          <li><strong>Valeur Cible :</strong> Rendement auto-calculé</li>
+          <li><strong>Clic cellule :</strong> Éditer valeur</li>
+        </ul>
+        <ul>
+          <li><strong>Ajouter :</strong> "+ Ajouter Position"</li>
+          <li><strong>Supprimer :</strong> Bouton rond rouge</li>
+          <li><strong>Imprimer :</strong> "🖨️ Imprimer / PDF"</li>
+          <li><strong>Automatique :</strong> Toutes valeurs recalculées ✓</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Fallback Universel -->
+  <div id="syncModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+    <div style="background:white; padding:25px; border-radius:8px; width:320px; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+      <h3 style="margin-bottom:10px; color:#1a5490; font-family:Segoe UI, sans-serif;">Synchronisation</h3>
+      <p style="margin-bottom:20px; font-size:13px; color:#666; line-height:1.4;">
+        Votre navigateur (Firefox/Safari) ne permet pas la synchro automatique de dossier.
+      </p>
+      <button onclick="manualSave()" style="width:100%; margin-bottom:10px; padding:12px; background:#4caf50; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:14px; display:flex; align-items:center; justify-content:center; gap:8px;">
+        <span>⬇️</span> Sauvegarder (Télécharger)
+      </button>
+      <button onclick="triggerLoad()" style="width:100%; margin-bottom:15px; padding:12px; background:#2196F3; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:14px; display:flex; align-items:center; justify-content:center; gap:8px;">
+        <span>⬆️</span> Charger un fichier
+      </button>
+      <button onclick="closeModal()" style="width:100%; padding:8px; background:transparent; color:#888; border:1px solid #ddd; border-radius:4px; cursor:pointer; font-size:12px;">
+        Annuler
+      </button>
+    </div>
+  </div>
+
+  <input type="file" id="jsonInput" accept=".json" style="display:none" onchange="manualLoad(this)">
+
+  <div class="footer">
+    <span class="footer-text">© 2026, Damien SICHAUMETTE</span>
+  </div>
+
+  <script>
+    // Check Storage Availability
+    try {
+      localStorage.setItem('test', '1');
+      localStorage.removeItem('test');
+    } catch (e) {
+      alert("Attention ! Le stockage local est désactivé ou restreint par votre navigateur. Les modifications ne seront pas conservées après la fermeture si vous n'exportez pas en JSON.");
+    }
+
+    let positions = [];
+    let especes = 0;
+
+    function formatEur(num) {
+      if (isNaN(num) || num === null || num === undefined) num = 0;
+      return new Intl.NumberFormat('fr-FR', {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(num);
+    }
+
+    function formatPctRatio(numRatio) {
+      if (isNaN(numRatio) || numRatio === null || numRatio === undefined) numRatio = 0;
+      return (numRatio * 100).toFixed(2).replace('.', ',') + ' %';
+    }
+
+    function formatPctValue(numPct) {
+      if (isNaN(numPct) || numPct === null || numPct === undefined) numPct = 0;
+      return (numPct).toFixed(2).replace('.', ',') + ' %';
+    }
+
+    // Parse FR number from "1 234,56 €" / "15,00 %" / "15.00"
+    function parseNum(txt) {
+      if (!txt) return 0;
+      let s = String(txt)
+        .replace(/\u202f/g, '') // narrow no-break space
+        .replace(/\s/g, '')
+        .replace('€', '')
+        .replace('%', '')
+        .trim();
+
+      if (s.includes(',')) {
+        // comma is decimal separator => remove dots as thousand separators
+        s = s.replace(/\./g, '');
+        s = s.replace(',', '.');
+      }
+      const v = parseFloat(s);
+      return isNaN(v) ? 0 : v;
+    }
+
+    function getValeurTotaleBase() {
+      const initVal = parseNum(document.getElementById('init-total')?.textContent);
+      const apportVal = parseNum(document.getElementById('apport-annuel')?.textContent);
+      return initVal + apportVal;
+    }
+
+    function updateValeurTotaleInit() {
+      const base = getValeurTotaleBase();
+      const el = document.getElementById('valeur-totale-init');
+      if (el) el.textContent = formatEur(base);
+    }
+
+    function updateManquants(cibleText, actuelleText) {
+      const cibleVal = parseNum(cibleText);
+      const actuelleVal = parseNum(actuelleText);
+      const manquant = cibleVal - actuelleVal;
+      const manquantPct = cibleVal !== 0 ? (manquant / cibleVal) * 100 : 0;
+
+      const mEuro = document.getElementById('manquantEuro');
+      if (mEuro) mEuro.textContent = formatEur(manquant);
+
+      const mPct = document.getElementById('manquantPct');
+      if (mPct) mPct.textContent = formatPctValue(manquantPct);
+    }
+
+    function updateCibleFromRendement(rendementPct) {
+      const base = getValeurTotaleBase();
+      if (base > 0) {
+        const newCible = base * (1 + rendementPct / 100);
+        const cibleEl = document.getElementById('valeurCible');
+        if (cibleEl) cibleEl.textContent = formatEur(newCible);
+      } else {
+        const cibleEl = document.getElementById('valeurCible');
+        if (cibleEl) cibleEl.textContent = formatEur(0);
+      }
+    }
+
+    function updateRendementFromCible(valeurCible) {
+      const base = getValeurTotaleBase();
+      if (base > 0) {
+        const newRend = ((valeurCible - base) / base) * 100;
+        const rendEl = document.getElementById('rendementPct');
+        if (rendEl) rendEl.textContent = formatPctValue(newRend);
+      } else {
+        const rendEl = document.getElementById('rendementPct');
+        if (rendEl) rendEl.textContent = formatPctValue(0);
+      }
+    }
+
+    function refreshTargetAndManquants() {
+      updateValeurTotaleInit();
+      const cibleEl = document.getElementById('valeurCible');
+      const actuEl = document.getElementById('valeurTotaleActuelle');
+      if (cibleEl && actuEl) updateManquants(cibleEl.textContent, actuEl.textContent);
+    }
+
+    // ================== STORAGE MODEL ==================
+    function getDataModel() {
+      const getVal = (id) => document.getElementById(id) ? document.getElementById(id).textContent : '';
+      return {
+        timestamp: Date.now(),
+        meta: {
+          titre: getVal('titre-app'),
+          compteNum: getVal('compte-num'),
+          compteNom: getVal('compte-nom'),
+          dateMiseAJour: getVal('dateActuelle')
+        },
+        initial: {
+          date: getVal('init-date'),
+          total: getVal('init-total'),
+          titres: getVal('init-titres'),
+          especes: getVal('init-especes'),
+          apportAnnuel: getVal('apport-annuel')
+        },
+        cible: {
+          rendementPct: getVal('rendementPct'),
+          valeurCible: getVal('valeurCible')
+        },
+        actuel: { especes },
+        positions
+      };
+    }
+
+    function saveToLocalStorage() {
+      localStorage.setItem('ctodata', JSON.stringify(getDataModel()));
+    }
+
+    function loadDataModel(data) {
+      if (!data) return;
+
+      const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val ?? el.textContent;
+      };
+
+      if (data.meta) {
+        setVal('titre-app', data.meta.titre);
+        setVal('compte-num', data.meta.compteNum);
+        setVal('compte-nom', data.meta.compteNom);
+        setVal('dateActuelle', data.meta.dateMiseAJour);
+      }
+
+      if (data.initial) {
+        setVal('init-date', data.initial.date);
+        setVal('init-total', data.initial.total);
+        setVal('init-titres', data.initial.titres);
+        setVal('init-especes', data.initial.especes);
+        setVal('apport-annuel', data.initial.apportAnnuel || '0,00 €');
+      }
+
+      if (data.cible) {
+        setVal('rendementPct', data.cible.rendementPct);
+        setVal('valeurCible', data.cible.valeurCible);
+      }
+
+      especes = parseFloat(data.actuel?.especes) || 0;
+      positions = Array.isArray(data.positions) ? data.positions : [];
+
+      renderTable();
+      updateValeurTotaleInit();
+      refreshTargetAndManquants();
+      saveToLocalStorage();
+    }
+
+    // ================== SYNC (fallback simple) ==================
+    async function handleSync() {
+      if (window.showDirectoryPicker) {
+        try {
+          await smartSyncChrome();
+        } catch (e) {
+          showModal();
+        }
+      } else {
+        showModal();
+      }
+    }
+
+    function showModal() { document.getElementById('syncModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('syncModal').style.display = 'none'; }
+
+    function manualSave() {
+      saveToLocalStorage();
+      const data = getDataModel();
+      const now = new Date();
+      const dateStr = now.toISOString().slice(0, 10);
+      const timeStr = now.getHours().toString().padStart(2,'0') + now.getMinutes().toString().padStart(2,'0');
+      const num = (data.meta.compteNum || 'COMPTE').replace(/[^a-zA-Z0-9]/g, '');
+      const fileName = `${num}_${dateStr}_${timeStr}.json`;
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      closeModal();
+    }
+
+    function triggerLoad() { document.getElementById('jsonInput').click(); }
+
+    function manualLoad(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const json = JSON.parse(e.target.result);
+          if (!json || typeof json !== 'object') throw new Error('Format invalide');
+          if (confirm('Charger les données du fichier ? Cela écrasera les données actuelles.')) {
+            loadDataModel(json);
+            alert('Données chargées avec succès !');
+          }
+        } catch (err) {
+          alert('Erreur ! Fichier JSON invalide ou corrompu. ' + err.message);
+        } finally {
+          closeModal();
+          input.value = '';
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    async function smartSyncChrome() {
+      const dirHandle = await window.showDirectoryPicker({ id: 'cto-sync-folder', mode: 'readwrite' });
+
+      const localDataStr = localStorage.getItem('ctodata');
+      const localData = localDataStr ? JSON.parse(localDataStr) : null;
+      const localTs = localData ? localData.timestamp : 0;
+
+      const compteNum = (document.getElementById('compte-num')?.textContent || '').trim();
+      let latestFileData = null;
+      let latestFileTs = 0;
+
+      for await (const entry of dirHandle.values()) {
+        if (entry.kind === 'file' && entry.name.endsWith('.json') && (!compteNum || entry.name.includes(compteNum))) {
+          const file = await entry.getFile();
+          const text = await file.text();
+          try {
+            const json = JSON.parse(text);
+            if (json.timestamp > latestFileTs) {
+              latestFileTs = json.timestamp;
+              latestFileData = json;
+            }
+          } catch {}
+        }
+      }
+
+      if (latestFileData && latestFileTs > localTs) {
+        if (confirm('Une version plus récente existe. Charger cette version ?')) {
+          loadDataModel(latestFileData);
+          return;
+        }
+      }
+
+      // export
+      saveToLocalStorage();
+      const data = getDataModel();
+      const now = new Date();
+      const dateStr = now.toISOString().slice(0, 10);
+      const timeStr = now.getHours().toString().padStart(2,'0') + now.getMinutes().toString().padStart(2,'0');
+      const num = (data.meta.compteNum || 'COMPTE').replace(/[^a-zA-Z0-9]/g, '');
+      const fileName = `${num}_${dateStr}_${timeStr}.json`;
+
+      const fileHandle = await dirHandle.getFileHandle(fileName, { create: true });
+      const writable = await fileHandle.createWritable();
+      await writable.write(JSON.stringify(data, null, 2));
+      await writable.close();
+      alert('Sauvegarde réussie : ' + fileName);
+    }
+
+    // ================== TABLE RENDER ==================
+    function renderTable() {
+      const tableBody = document.getElementById('tableBody');
+      tableBody.innerHTML = '';
+
+      let totalValeur = 0;
+      let totalPlusValues = 0;
+
+      positions.forEach((pos, idx) => {
+        const valeur = (pos.qty || 0) * (pos.cours || 0);
+        const plusValues = valeur - ((pos.qty || 0) * (pos.pru || 0));
+        const perf = (pos.qty || 0) !== 0 ? (plusValues / ((pos.qty || 0) * (pos.pru || 0) || 1)) : 0;
+
+        totalValeur += valeur;
+        totalPlusValues += plusValues;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="editable-cell"><span onclick="enableEdit(this,'nom',${idx})">${pos.nom ?? ''}</span></td>
+          <td class="editable-cell"><span onclick="enableEdit(this,'code',${idx})">${pos.code ?? ''}</span></td>
+          <td class="number editable-cell"><span onclick="enableEdit(this,'qty',${idx})">${pos.qty ?? 0}</span></td>
+          <td class="number editable-cell"><span onclick="enableEdit(this,'pru',${idx})">${Number(pos.pru ?? 0).toFixed(3)}</span></td>
+          <td class="number editable-cell"><span onclick="enableEdit(this,'cours',${idx})">${Number(pos.cours ?? 0).toFixed(3)}</span></td>
+          <td class="number">${formatEur(valeur)}</td>
+          <td class="number ${plusValues >= 0 ? 'positive' : 'negative'}">${formatEur(plusValues)}</td>
+          <td class="number ${(pos.qty || 0) === 0 ? 'neutral' : perf >= 0 ? 'positive' : 'negative'}">${(pos.qty || 0) === 0 ? '-' : formatPctRatio(perf)}</td>
+          <td><button class="btn-delete" onclick="supprimerLigne(${idx})">×</button></td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+      const totalRow = document.createElement('tr');
+      totalRow.className = 'total-row';
+      totalRow.innerHTML = `
+        <td colspan="5" style="text-align:left;"><strong>TOTAL TITRES</strong></td>
+        <td class="number"><strong>${formatEur(totalValeur)}</strong></td>
+        <td class="number ${totalPlusValues >= 0 ? 'positive' : 'negative'}"><strong>${formatEur(totalPlusValues)}</strong></td>
+        <td class="number ${totalValeur === 0 ? 'neutral' : totalPlusValues >= 0 ? 'positive' : 'negative'}"><strong>${totalValeur === 0 ? '-' : formatPctRatio(totalPlusValues / totalValeur)}</strong></td>
+        <td></td>
+      `;
+      tableBody.appendChild(totalRow);
+
+      const especesRow = document.createElement('tr');
+      especesRow.className = 'section-row';
+      especesRow.innerHTML = `
+        <td colspan="5" style="text-align:left;"><strong>ESPÈCES</strong></td>
+        <td class="number editable-cell"><span id="especesDisplay" onclick="enableEditEspeces()">${formatEur(especes)}</span></td>
+        <td colspan="3"></td>
+      `;
+      tableBody.appendChild(especesRow);
+
+      const globalRow = document.createElement('tr');
+      globalRow.className = 'total-row';
+      const valeurGlobale = totalValeur + especes;
+      globalRow.innerHTML = `
+        <td colspan="5" style="text-align:left;"><strong>VALEUR TOTALE PORTEFEUILLE</strong></td>
+        <td class="number"><strong>${formatEur(valeurGlobale)}</strong></td>
+        <td class="number ${totalPlusValues >= 0 ? 'positive' : 'negative'}"><strong>${formatEur(totalPlusValues)}</strong></td>
+        <td class="number ${valeurGlobale === 0 ? 'neutral' : totalPlusValues >= 0 ? 'positive' : 'negative'}"><strong>${valeurGlobale === 0 ? '-' : formatPctRatio(totalPlusValues / valeurGlobale)}</strong></td>
+        <td></td>
+      `;
+      tableBody.appendChild(globalRow);
+
+      document.getElementById('valeurTotaleActuelle').textContent = formatEur(valeurGlobale);
+      document.getElementById('titresActuels').textContent = formatEur(totalValeur);
+      document.getElementById('especesActuelles').textContent = formatEur(especes);
+
+      // Rendement actuel (conserve la logique: basé sur init-total uniquement)
+      const initVal = parseNum(document.getElementById('init-total')?.textContent);
+      if (initVal !== 0) {
+        const rendementActuel = ((valeurGlobale - initVal) / initVal) * 100;
+        document.getElementById('rendementActuel').textContent = formatPctValue(rendementActuel);
+      } else {
+        document.getElementById('rendementActuel').textContent = formatPctValue(0);
+      }
+
+      // Toujours maintenir la valeur totale init+apport et les manquants à jour
+      updateValeurTotaleInit();
+      refreshTargetAndManquants();
+
+      saveToLocalStorage();
+    }
+
+    // ================== EDIT TABLE CELLS ==================
+    function enableEdit(spanElement, field, idx) {
+      const currentValue = spanElement.innerText;
+      const cell = spanElement.parentElement;
+      spanElement.style.display = 'none';
+
+      const input = document.createElement('input');
+      input.type = (field === 'nom' || field === 'code') ? 'text' : 'number';
+      input.value = currentValue;
+      if (field !== 'nom' && field !== 'code') input.step = '0.001';
+      input.className = 'editable';
+      cell.appendChild(input);
+      input.focus();
+      input.select();
+
+      function saveChange() {
+        const value = (field === 'nom' || field === 'code') ? input.value : (parseFloat(input.value) || 0);
+        positions[idx] = positions[idx] || {};
+        positions[idx][field] = value;
+        input.remove();
+        spanElement.style.display = 'block';
+        renderTable();
+      }
+
+      input.addEventListener('blur', saveChange);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') saveChange();
+        else if (e.key === 'Escape') {
+          input.remove();
+          spanElement.style.display = 'block';
+        }
+      });
+    }
+
+    function enableEditEspeces() {
+      const display = document.getElementById('especesDisplay');
+      if (!display) return;
+      display.style.display = 'none';
+
+      const cell = display.parentElement;
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.value = especes;
+      input.step = '0.01';
+      input.className = 'editable';
+      cell.appendChild(input);
+      input.focus();
+      input.select();
+
+      function saveEspecesChange() {
+        especes = parseFloat(input.value) || 0;
+        input.remove();
+        display.style.display = 'block';
+        renderTable();
+      }
+
+      input.addEventListener('blur', saveEspecesChange);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') saveEspecesChange();
+        else if (e.key === 'Escape') {
+          input.remove();
+          display.style.display = 'block';
+        }
+      });
+    }
+
+    function ajouterLigne() {
+      positions.push({ nom: 'NOUVELLE POSITION', code: 'NEW', qty: 0, pru: 0, cours: 0 });
+      renderTable();
+    }
+
+    function supprimerLigne(idx) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer cette ligne ?')) {
+        positions.splice(idx, 1);
+        renderTable();
+      }
+    }
+
+    function imprimerTableau() { window.print(); }
+
+    // ================== INLINE EDIT (HEADER / CARTOUCHES) ==================
+    function setupInlineEditing() {
+      document.querySelectorAll('.editable-inline').forEach((el) => {
+        el.addEventListener('click', function () {
+          if (this.classList.contains('editing')) return;
+          startEdit(this);
+        });
+      });
+    }
+
+    function startEdit(element) {
+      element.classList.add('editing');
+      const currentText = element.textContent.trim();
+      const dataType = element.dataset.type || 'text';
+
+      const input = document.createElement('input');
+      input.type = (dataType === 'dateJJMMAAAA') ? 'date' : 'text';
+      input.style.width = '100%';
+      input.style.textAlign = 'right';
+
+      if (dataType === 'dateJJMMAAAA') {
+        const parts = currentText.split('/');
+        if (parts.length === 3) input.value = parts[2] + '-' + parts[1] + '-' + parts[0];
+        else input.value = '';
+      } else if (dataType === 'euro') {
+        input.value = String(parseNum(currentText)).replace('.', ','); // simple & stable
+      } else if (dataType === 'pct') {
+        input.value = String(parseNum(currentText)).replace('.', ',');
+      } else {
+        input.value = currentText;
+      }
+
+      element.innerHTML = '';
+      element.appendChild(input);
+      input.focus();
+      input.select();
+
+      let finished = false;
+
+      function finishEdit() {
+        if (finished) return;
+        finished = true;
+
+        const rawValue = input.value.trim();
+        element.classList.remove('editing');
+
+        if (dataType === 'dateJJMMAAAA') {
+          const parts = rawValue.split('-');
+          if (parts.length === 3) element.textContent = parts[2] + '/' + parts[1] + '/' + parts[0];
+          else element.textContent = currentText;
+          saveToLocalStorage();
+          return;
+        }
+
+        if (dataType === 'euro') {
+          const num = parseNum(rawValue);
+          element.textContent = formatEur(num);
+
+          if (element.id === 'valeurCible') {
+            updateRendementFromCible(num);
+          }
+
+          // IMPORTANT: si init-total ou apport change => base change => recalcul de cible + manquants
+          if (element.id === 'init-total' || element.id === 'apport-annuel') {
+            updateValeurTotaleInit();
+            const rendVal = parseNum(document.getElementById('rendementPct')?.textContent);
+            updateCibleFromRendement(rendVal);
+          }
+
+          renderTable(); // met à jour situation actuelle + manquants
+          saveToLocalStorage();
+          return;
+        }
+
+        if (dataType === 'pct') {
+          const num = parseNum(rawValue);
+          element.textContent = formatPctValue(num);
+
+          if (element.id === 'rendementPct') {
+            updateCibleFromRendement(num);
+          }
+
+          renderTable(); // met à jour situation actuelle + manquants
+          saveToLocalStorage();
+          return;
+        }
+
+        element.textContent = rawValue;
+        saveToLocalStorage();
+      }
+
+      input.addEventListener('blur', finishEdit);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+        if (e.key === 'Escape') {
+          finished = true;
+          element.classList.remove('editing');
+          element.textContent = currentText;
+        }
+      });
+    }
+      
+      function toggleSituationBoxes() {
+        const boxes = document.querySelectorAll('.situation-box');
+        if (!boxes.length) return;
+        const isCollapsed = boxes[0].classList.contains('collapsed');
+        boxes.forEach(b => b.classList.toggle('collapsed', !isCollapsed));
+      }
+
+      function updateCompactValues() {
+        const mappings = [
+          { boxSelector: '.situation-initial', labelText: 'Valeur Totale', compactKey: 'initial' },
+          { boxSelector: '.situation-target',  labelText: 'Valeur Cible',  compactKey: 'target'  },
+          { boxSelector: '.situation-current', labelText: 'Valeur Totale', compactKey: 'current' }
+        ];
+
+        mappings.forEach(m => {
+          const box = document.querySelector(m.boxSelector);
+          if (!box) return;
+
+          const compactEl = box.querySelector(`[data-compact-for="${m.compactKey}"]`);
+          if (!compactEl) return;
+
+          const rows = Array.from(box.querySelectorAll('.row'));
+          const row = rows.find(r => (r.querySelector('.label')?.textContent || '').trim() === m.labelText);
+          const val = (row?.querySelector('.value')?.textContent || '').trim();
+
+          if (val && compactEl.textContent !== val) compactEl.textContent = val;
+        });
+      }
+
+
+    // ================== INIT ==================
+    window.addEventListener('DOMContentLoaded', () => {
+      setupInlineEditing();
+      // Mobile: replié par défaut
+      if (window.innerWidth <= 768) {
+        document.querySelectorAll('.situation-box').forEach(b => b.classList.add('collapsed'));
+      }
+
+      // Toggle synchronisé au clic (uniquement mobile), sans gêner l’édition inline
+      document.querySelectorAll('.situation-box').forEach(box => {
+        box.addEventListener('click', (e) => {
+          if (window.innerWidth > 768) return;
+          if (e.target.closest('.editable-inline')) return; // ne pas toggle quand on édite
+          toggleSituationBoxes();
+        });
+      });
+
+      // Init compact values
+      updateCompactValues();
+
+      // Mise à jour auto si les calculs modifient le DOM des cartouches
+      const sc = document.querySelector('.situation-container');
+      if (sc) {
+          let __compactRaf = null;
+          const obs = new MutationObserver(() => {
+            if (__compactRaf) cancelAnimationFrame(__compactRaf);
+            __compactRaf = requestAnimationFrame(() => updateCompactValues());
+          });
+        obs.observe(sc, { childList: true, subtree: true, characterData: true });
+      }
+
+
+      const localData = localStorage.getItem('ctodata');
+      if (localData) {
+        try {
+          const parsed = JSON.parse(localData);
+          if (parsed && typeof parsed === 'object') loadDataModel(parsed);
+          else renderTable();
+        } catch {
+          renderTable();
+        }
+      } else {
+        renderTable();
+      }
+
+      // Ensure base display correct on first paint
+      updateValeurTotaleInit();
+      refreshTargetAndManquants();
+    });
+  </script>
+</body>
+</html>
