@@ -887,10 +887,10 @@
       document.getElementById('especesActuelles').textContent = formatEur(especes);
 
       // Rendement actuel (conserve la logique: basé sur init-total uniquement)
-      const TotalVal = parseNum(document.getElementById('valeur-totale-init')?.textContent);
+      
       const initVal = parseNum(document.getElementById('init-total')?.textContent);
       if (initVal !== 0) {
-        const rendementActuel = ((valeurGlobale - TotalVal) / TotalVal) * 100;
+        const rendementActuel = ((valeurGlobale - base) / base) * 100;
         document.getElementById('rendementActuel').textContent = formatPctValue(rendementActuel);
       } else {
         document.getElementById('rendementActuel').textContent = formatPctValue(0);
