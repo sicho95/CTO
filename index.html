@@ -968,8 +968,8 @@
       document.getElementById('especesActuelles').textContent = formatEur(especes);
 
       // Rendement actuel (conserve la logique: basé sur init-total uniquement)
-      const initVal = parseNum(document.getElementById('init-total')?.textContent);
-      if (initVal !== 0) {
+      const base = getValeurTotaleBase();
+      if (base !== 0) {
         const rendementActuel = ((valeurGlobale - base) / base) * 100;
         document.getElementById('rendementActuel').textContent = formatPctValue(rendementActuel);
       } else {
