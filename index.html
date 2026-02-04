@@ -682,7 +682,7 @@
       const cibleVal = parseNum(cibleText);
       const actuelleVal = parseNum(actuelleText);
       const manquant = cibleVal - actuelleVal;
-      const manquantPct = (cibleVal / actuelleVal)-1;
+      const manquantPct = ((cibleVal / actuelleVal)-1)*100;
 
       const mEuro = document.getElementById('manquantEuro');
       if (mEuro) mEuro.textContent = formatEur(manquant);
